@@ -173,8 +173,9 @@
 
                         @if(auth()->user()->role === 'Manajer Gudang')
                         <li>
-                            <a href="#" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg group hover:bg-gray-100">
-                                <svg class="w-6 h-6 text-gray-500 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+                            <a href="{{ route('stock-opname.index') }}"
+                                class="flex items-center p-2 text-base font-medium rounded-lg group {{ request()->routeIs('stock-opname.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
+                                <svg class="w-6 h-6 {{ request()->routeIs('stock-opname.*') ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-900' }}" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="ml-3">Stock Opname</span>

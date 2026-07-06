@@ -7,6 +7,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductAttributeController;
 use App\Http\Controllers\StockTransactionController;
+use App\Http\Controllers\StockOpnameController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,9 +83,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/stock-transactions/out/create', [StockTransactionController::class, 'createOut'])->name('stock-transactions.out.create');
         Route::post('/stock-transactions/out', [StockTransactionController::class, 'storeOut'])->name('stock-transactions.out.store');
 
-
-        // Stock Opname (akan kita isi di Fase 6e)
-        // Route::get('/stock-opname', ...);
+        Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
+        Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
     });
 
     /*
