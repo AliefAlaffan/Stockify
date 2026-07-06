@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/stockify-icon-256.png') }}">
 
-    <title>{{ config('app.name', 'Stockify') }} @isset($header) — {{ $header }} @endisset</title>
+    <title>{{ config('app.name', 'Stockify') }} — @isset($header){{ $header }}@else Dashboard @endisset</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,33 +18,17 @@
 
     <!-- Navbar -->
     <nav class="bg-white border-b border-gray-200/80 fixed z-30 w-full">
-        <div class="px-4 py-3 lg:px-6">
+        <div class="px-4 py-2.5 lg:px-5">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar"
-                        class="p-2 text-steel rounded-lg cursor-pointer lg:hidden hover:bg-canvas-alt">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
-                        <span class="flex items-center justify-center w-8 h-8 rounded bg-ink text-amber font-display font-bold text-sm">S</span>
-                        <span class="font-display font-semibold text-lg tracking-tight text-ink">Stockify</span>
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 pr-3 mr-1 border-r border-gray-200">
+                        <img src="{{ asset('images/stockify-logo-full.png') }}" alt="Stockify" class="h-10 w-auto object-contain">
                     </a>
-
-                    <!-- Breadcrumb ala manifest tag -->
-                    @isset($header)
-                        <span class="hidden md:inline-flex items-center gap-2 pl-4 ml-1 border-l border-gray-200 font-mono-data text-[11px] uppercase tracking-wider text-steel">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
-                            {{ $header }}
-                        </span>
-                    @endisset
                 </div>
 
                 <div class="flex items-center gap-3">
                     <span class="hidden sm:inline-flex stock-tag bg-canvas-alt text-ink-soft">
-                        <span class="stock-tag-dot bg-amber"></span>
+                        <span class="stock-tag-dot bg-brand"></span>
                         {{ strtoupper(auth()->user()->role) }}
                     </span>
 
@@ -64,9 +49,7 @@
                                 <p class="text-xs text-steel truncate">{{ auth()->user()->email }}</p>
                             </div>
                             <ul class="py-1">
-                                <li>
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-ink-soft hover:bg-canvas-alt">Profil Saya</a>
-                                </li>
+                                <li><a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-ink-soft hover:bg-canvas-alt">Profil Saya</a></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -84,126 +67,151 @@
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed top-0 left-0 z-20 flex flex-col w-64 h-full pt-16 lg:flex bg-white border-r border-gray-200/80">
-        <div class="flex flex-col flex-1 pt-4 pb-4 overflow-y-auto sidebar-scroll">
-            <nav class="flex-1 px-3 space-y-6">
 
-                <div>
-                    <p class="px-3 mb-1 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Utama</p>
+        <div class="flex flex-col flex-1 pt-6 pb-4 overflow-y-auto sidebar-scroll">
+            <nav class="flex-1 px-4 space-y-7">
+
+                <!-- UTAMA -->
+                <div class="sidebar-item-in" style="animation-delay: 0ms">
+                    <p class="sidebar-group-title px-2 mb-2.5 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Utama</p>
                     <a href="{{ route('dashboard') }}"
-                        class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('dashboard') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                        <svg class="w-[18px] h-[18px] {{ request()->routeIs('dashboard') ? 'text-amber-dark' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                        </svg>
-                        Dashboard
+                        class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('dashboard') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                        <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('dashboard') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                        </span>
+                        <span class="sidebar-label">Dashboard</span>
                     </a>
                 </div>
 
+                <!-- DATA MASTER -->
                 @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))
-                <div>
-                    <p class="px-3 mb-1 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Data Master</p>
-                    <div class="space-y-0.5">
+                <div class="sidebar-item-in" style="animation-delay: 40ms">
+                    <button type="button" class="sidebar-group-title flex items-center justify-between w-full px-2 mb-2.5" data-group-toggle="master">
+                        <span class="text-[10px] font-semibold tracking-widest text-steel-light uppercase">Data Master</span>
+                        <svg class="group-chevron w-3 h-3 text-steel-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                    </button>
+                    <div class="group-items space-y-1.5" data-group="master">
                         <a href="{{ route('products.index') }}"
-                            class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('products.*') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('products.*') ? 'text-amber-dark' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
-                            </svg>
-                            Produk
+                            class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('products.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('products.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path></svg>
+                            </span>
+                            <span class="sidebar-label">Produk</span>
+                        
                         </a>
                         @if(auth()->user()->role === 'Admin')
                         <a href="{{ route('categories.index') }}"
-                            class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('categories.*') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('categories.*') ? 'text-amber-dark' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v10a2 2 0 002 2h10a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H5a1 1 0 000 2z" clip-rule="evenodd"></path>
-                            </svg>
-                            Kategori
+                            class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('categories.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('categories.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v10a2 2 0 002 2h10a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H5a1 1 0 000 2z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Kategori</span>
+                        
                         </a>
                         <a href="{{ route('suppliers.index') }}"
-                            class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('suppliers.*') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('suppliers.*') ? 'text-amber-dark' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"></path>
-                            </svg>
-                            Supplier
+                            class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('suppliers.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('suppliers.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"/></svg>
+                            </span>
+                            <span class="sidebar-label">Supplier</span>
+                           
                         </a>
                         @endif
                     </div>
                 </div>
                 @endif
 
+                <!-- OPERASI -->
                 @if(auth()->user()->role !== 'Admin')
-                <div>
-                    <p class="px-3 mb-1 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Operasi</p>
-                    <div class="space-y-0.5">
+                <div class="sidebar-item-in" style="animation-delay: 80ms">
+                    <button type="button" class="sidebar-group-title flex items-center justify-between w-full px-2 mb-2.5" data-group-toggle="operasi">
+                        <span class="text-[10px] font-semibold tracking-widest text-steel-light uppercase">Operasi</span>
+                        <svg class="group-chevron w-3 h-3 text-steel-light" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                    </button>
+                    <div class="group-items space-y-1.5" data-group="operasi">
                         @if(auth()->user()->role === 'Manajer Gudang')
                         <a href="{{ route('stock-transactions.in.index') }}"
-                            class="nav-link {{ request()->routeIs('stock-transactions.in.*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('stock-transactions.in.*') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('stock-transactions.in.*') ? 'text-depot' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"></path>
-                            </svg>
-                            Barang Masuk
+                            class="nav-link {{ request()->routeIs('stock-transactions.in.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.in.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-transactions.in.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Barang Masuk</span>
+                            
                         </a>
                         <a href="{{ route('stock-transactions.out.index') }}"
-                            class="nav-link {{ request()->routeIs('stock-transactions.out.*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('stock-transactions.out.*') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('stock-transactions.out.*') ? 'text-rust' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a.75.75 0 000 1.5h6A.75.75 0 0013 9H7z" clip-rule="evenodd"></path>
-                            </svg>
-                            Barang Keluar
+                            class="nav-link {{ request()->routeIs('stock-transactions.out.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.out.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-transactions.out.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a.75.75 0 000 1.5h6A.75.75 0 0013 9H7z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Barang Keluar</span>
+                            
                         </a>
                         <a href="{{ route('stock-opname.index') }}"
-                            class="nav-link {{ request()->routeIs('stock-opname.*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('stock-opname.*') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('stock-opname.*') ? 'text-amber-dark' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" clip-rule="evenodd"></path>
-                            </svg>
-                            Stock Opname
+                            class="nav-link {{ request()->routeIs('stock-opname.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-opname.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-opname.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Stock Opname</span>
+                            
                         </a>
                         @endif
 
                         @if(auth()->user()->role === 'Staff Gudang')
                         <a href="{{ route('stock-transactions.confirm.incoming') }}"
-                            class="nav-link {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'text-depot' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"></path>
-                            </svg>
-                            Konfirmasi Masuk
+                            class="nav-link {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Konfirmasi Masuk</span>
+                       
                         </a>
                         <a href="{{ route('stock-transactions.confirm.outgoing') }}"
-                            class="nav-link {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'text-ink' : 'text-ink-soft hover:bg-canvas-alt' }}">
-                            <svg class="w-[18px] h-[18px] {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'text-rust' : 'text-steel' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"></path>
-                            </svg>
-                            Konfirmasi Keluar
+                            class="nav-link {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Konfirmasi Keluar</span>
+                            
                         </a>
                         @endif
                     </div>
                 </div>
                 @endif
 
+                <!-- LAPORAN -->
                 @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))
-                <div>
-                    <p class="px-3 mb-1 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Laporan</p>
-                    <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-ink-soft hover:bg-canvas-alt">
-                        <svg class="w-[18px] h-[18px] text-steel" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V4z" clip-rule="evenodd"></path>
-                        </svg>
-                        Laporan
+                <div class="sidebar-item-in" style="animation-delay: 120ms">
+                    <p class="sidebar-group-title px-2 mb-2.5 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Laporan</p>
+                    <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
+                        <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
+                            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V4z" clip-rule="evenodd"/></svg>
+                        </span>
+                        <span class="sidebar-label">Laporan</span>
+                        
                     </a>
                 </div>
                 @endif
 
+                <!-- SISTEM -->
                 @if(auth()->user()->role === 'Admin')
-                <div>
-                    <p class="px-3 mb-1 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Sistem</p>
-                    <div class="space-y-0.5">
-                        <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-ink-soft hover:bg-canvas-alt">
-                            <svg class="w-[18px] h-[18px] text-steel" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                            </svg>
-                            Pengguna
+                <div class="sidebar-item-in" style="animation-delay: 160ms">
+                    <p class="sidebar-group-title px-2 mb-2.5 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Sistem</p>
+                    <div class="space-y-1.5">
+                        <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Pengguna</span>
+                            
                         </a>
-                        <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-sm font-medium text-ink-soft hover:bg-canvas-alt">
-                            <svg class="w-[18px] h-[18px] text-steel" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
-                            </svg>
-                            Pengaturan
+                        <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <span class="sidebar-label">Pengaturan</span>
+                            
                         </a>
                     </div>
                 </div>
@@ -211,22 +219,45 @@
 
             </nav>
 
-            <!-- Footer mini sidebar -->
-            <div class="px-3 pt-4 mt-2 border-t border-gray-100">
-                <div class="stock-tag bg-canvas-alt text-steel w-full justify-center py-2">
-                    <span class="stock-tag-dot bg-depot"></span>
-                    SISTEM AKTIF
+            <!-- User card + Logout -->
+            <div class="px-4 pt-4 mt-2 border-t border-gray-100 space-y-2">
+                <div class="sidebar-user-info flex items-center gap-3 p-3 rounded-2xl bg-canvas-alt">
+                    <div class="w-9 h-9 rounded-xl bg-ink text-white flex items-center justify-center font-display font-semibold text-sm flex-shrink-0">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-semibold text-ink truncate">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-steel truncate">{{ auth()->user()->role }}</p>
+                    </div>
                 </div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"
+                        class="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-rust/10 text-rust text-sm font-semibold hover:bg-rust/[0.16] transition-colors">
+                        <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M7 15.5H4.5A1.5 1.5 0 013 14V6a1.5 1.5 0 011.5-1.5H7M13 13.5l3.5-3.5-3.5-3.5M16.5 10H7.5"/>
+                        </svg>
+                        <span class="sidebar-label">Keluar</span>
+                    </a>
+                </form>
             </div>
         </div>
     </aside>
 
     <!-- Main content -->
-    <div class="pt-16 lg:pl-64">
+    <div class="main-content pt-16 lg:pl-64 transition-all duration-300">
         <main class="p-5 lg:p-7 max-w-[1400px]">
             {{ $slot }}
         </main>
     </div>
 
+    <script>
+        document.querySelectorAll('[data-group-toggle]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.parentElement.classList.toggle('group-collapsed');
+            });
+        });
+    </script>
 </body>
 </html>
