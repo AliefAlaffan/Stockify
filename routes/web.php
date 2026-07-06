@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductAttributeController;
+use App\Http\Controllers\StockTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,9 +72,19 @@ Route::middleware('auth')->group(function () {
     */
     Route::middleware(['role:Manajer Gudang'])->group(function () {
 
-        // Stock Opname
-        // Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
-        // Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
+        // Transaksi Barang Masuk (input oleh Manajer Gudang)
+        Route::get('/stock-transactions/in', [StockTransactionController::class, 'indexIn'])->name('stock-transactions.in.index');
+        Route::get('/stock-transactions/in/create', [StockTransactionController::class, 'createIn'])->name('stock-transactions.in.create');
+        Route::post('/stock-transactions/in', [StockTransactionController::class, 'storeIn'])->name('stock-transactions.in.store');
+
+        // Transaksi Barang Keluar (input oleh Manajer Gudang)
+        Route::get('/stock-transactions/out', [StockTransactionController::class, 'indexOut'])->name('stock-transactions.out.index');
+        Route::get('/stock-transactions/out/create', [StockTransactionController::class, 'createOut'])->name('stock-transactions.out.create');
+        Route::post('/stock-transactions/out', [StockTransactionController::class, 'storeOut'])->name('stock-transactions.out.store');
+
+
+        // Stock Opname (akan kita isi di Fase 6e)
+        // Route::get('/stock-opname', ...);
     });
 
     /*
@@ -99,9 +110,13 @@ Route::middleware('auth')->group(function () {
     */
     Route::middleware(['role:Staff Gudang'])->group(function () {
 
-        // Konfirmasi Penerimaan & Pengeluaran Barang
-        // Route::put('/stock-transactions/{id}/confirm-in', [StockTransactionController::class, 'confirmIn'])->name('stock-transactions.confirm-in');
-        // Route::put('/stock-transactions/{id}/confirm-out', [StockTransactionController::class, 'confirmOut'])->name('stock-transactions.confirm-out');
+        // Konfirmasi Penerimaan Barang
+        Route::get('/stock-transactions/confirm/incoming', [StockTransactionController::class, 'pendingIncoming'])->name('stock-transactions.confirm.incoming');
+        Route::put('/stock-transactions/confirm/incoming/{id}', [StockTransactionController::class, 'confirmIncoming'])->name('stock-transactions.confirm.incoming.update');
+
+        // Konfirmasi Pengeluaran Barang
+        Route::get('/stock-transactions/confirm/outgoing', [StockTransactionController::class, 'pendingOutgoing'])->name('stock-transactions.confirm.outgoing');
+        Route::put('/stock-transactions/confirm/outgoing/{id}', [StockTransactionController::class, 'confirmOutgoing'])->name('stock-transactions.confirm.outgoing.update');
     });
 
     /*

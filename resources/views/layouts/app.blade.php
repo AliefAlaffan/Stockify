@@ -129,16 +129,45 @@
                         </li>
                         @endif
 
-                        @if(auth()->user()->role !== 'Admin')
+                       @if(auth()->user()->role !== 'Admin')
                         <li>
-                            <a href="#"
-                                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg group hover:bg-gray-100">
-                                <svg class="w-6 h-6 text-gray-500 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+                            <button type="button" class="flex items-center w-full p-2 text-base font-medium text-gray-900 rounded-lg group hover:bg-gray-100"
+                                data-collapse-toggle="dropdown-transaksi">
+                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                                     <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"></path>
                                 </svg>
-                                <span class="ml-3">Transaksi Stok</span>
-                            </a>
+                                <span class="flex-1 ml-3 text-left whitespace-nowrap">Transaksi Stok</span>
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                            <ul id="dropdown-transaksi" class="py-2 space-y-1">
+                            @if(auth()->user()->role === 'Manajer Gudang')
+                            <li>
+                                <a href="{{ route('stock-transactions.in.index') }}" class="flex items-center p-2 pl-11 text-sm rounded-lg {{ request()->routeIs('stock-transactions.in.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
+                                    Barang Masuk
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('stock-transactions.out.index') }}" class="flex items-center p-2 pl-11 text-sm rounded-lg {{ request()->routeIs('stock-transactions.out.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
+                                    Barang Keluar
+                                </a>
+                            </li>
+                            @endif
+                            @if(auth()->user()->role === 'Staff Gudang')
+                            <li>
+                                <a href="{{ route('stock-transactions.confirm.incoming') }}" class="flex items-center p-2 pl-11 text-sm rounded-lg {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'bg-blue-50 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
+                                    Konfirmasi Barang Masuk
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('stock-transactions.confirm.outgoing') }}" class="flex items-center p-2 pl-11 text-sm rounded-lg {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'bg-blue-50 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
+                                    Konfirmasi Barang Keluar
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
                         </li>
                         @endif
 
