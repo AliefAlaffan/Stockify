@@ -1,6 +1,6 @@
 <x-layout>
     @isset($header)
-        {{ $header }}
+        <x-slot name="header">{{ $header }}</x-slot>
     @endisset
 
     {{ $slot }}
