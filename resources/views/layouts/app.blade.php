@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('images/stockify-icon-256.png') }}">
 
-    <title>{{ config('app.name', 'Stockify') }} — @isset($header){{ $header }}@else Dashboard @endisset</title>
+   <title>{{ setting('app_name', config('app.name', 'Stockify')) }} — @isset($header){{ $header }}@else Dashboard @endisset</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +25,11 @@
                  <!-- Logo -->
                 <div class="flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center">
-                        <img src="{{ asset('images/stockify-logo-full.png') }}" alt="Stockify" class="h-10 w-auto object-contain">
+                        @if (setting('app_logo'))
+                            <img src="{{ Storage::url(setting('app_logo')) }}" alt="{{ setting('app_name', 'Stockify') }}" class="h-10 w-auto object-contain">
+                        @else
+                            <img src="{{ asset('images/stockify-logo-full.png') }}" alt="Stockify" class="h-10 w-auto object-contain">
+                        @endif
                     </a>
                 </div>
 
@@ -255,12 +260,12 @@
                             </span>
                             <span class="sidebar-label">Pengguna</span>
                         </a>
-                        <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
-                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
+                        <a href="{{ route('settings.edit') }}"
+                            class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('settings.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('settings.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
                             </span>
                             <span class="sidebar-label">Pengaturan</span>
-                            
                         </a>
                     </div>
                 </div>

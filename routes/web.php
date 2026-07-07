@@ -11,6 +11,7 @@ use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;    
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +74,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/user-activity/export/excel', [ReportController::class, 'userActivityExportExcel'])->name('reports.user-activity.export.excel');
         
         Route::resource('users', UserController::class)->except(['show']);
+
+        Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
     });
 
     /*
