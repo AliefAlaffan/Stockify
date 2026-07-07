@@ -14,9 +14,14 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $categories = $this->categoryService->getAllCategories();
+        $categories = $this->categoryService->getAllCategories($request->search);
+
+        if ($request->ajax()) {
+            return view('categories._table', compact('categories'))->render();
+        }
+
         return view('categories.index', compact('categories'));
     }
 

@@ -2,50 +2,35 @@
 
 namespace App\Services;
 
-use App\Repositories\Contracts\CategoryRepositoryInterface;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Category;
 
 class CategoryService
 {
-    protected CategoryRepositoryInterface $categoryRepository;
-
-    public function __construct(CategoryRepositoryInterface $categoryRepository)
+    public function getAllCategories(?string $search = null, int $perPage = 15)
     {
-        $this->categoryRepository = $categoryRepository;
+        return Category::when($search, function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
-    public function getAllCategories()
+    public function createCategory(array $data): Category
     {
-        return $this->categoryRepository->all();
+        return Category::create($data);
     }
 
-    public function getCategoryById(int $id)
+    public function updateCategory(int $id, array $data): Category
     {
-        return $this->categoryRepository->find($id);
+        $category = Category::findOrFail($id);
+        $category->update($data);
+        return $category;
     }
 
-    public function createCategory(array $data)
+    public function deleteCategory(int $id): void
     {
-        $validated = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ])->validate();
-
-        return $this->categoryRepository->create($validated);
-    }
-
-    public function updateCategory(int $id, array $data)
-    {
-        $validated = Validator::make($data, [
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-        ])->validate();
-
-        return $this->categoryRepository->update($id, $validated);
-    }
-
-    public function deleteCategory(int $id)
-    {
-        return $this->categoryRepository->delete($id);
+        Category::findOrFail($id)->delete();
     }
 }

@@ -20,7 +20,7 @@ use App\Http\Controllers\SettingController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 /*
@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:Admin,Manajer Gudang'])->group(function () {
 
         Route::resource('products', ProductController::class);
+
+        Route::get('/products-export', [ProductController::class, 'exportExcel'])->name('products.export');
+        Route::get('/products-import-template', [ProductController::class, 'downloadTemplate'])->name('products.import.template');
+        Route::post('/products-import', [ProductController::class, 'import'])->name('products.import');
 
         Route::get('/products/{product}/attributes', [ProductAttributeController::class, 'index'])
             ->name('products.attributes.index');
@@ -130,6 +134,8 @@ Route::middleware('auth')->group(function () {
         // Konfirmasi Pengeluaran Barang
         Route::get('/stock-transactions/confirm/outgoing', [StockTransactionController::class, 'pendingOutgoing'])->name('stock-transactions.confirm.outgoing');
         Route::put('/stock-transactions/confirm/outgoing/{id}', [StockTransactionController::class, 'confirmOutgoing'])->name('stock-transactions.confirm.outgoing.update');
+
+        
     });
 
     /*

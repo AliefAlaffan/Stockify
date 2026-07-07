@@ -6,6 +6,11 @@ use App\Services\ProductService;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\SupplierRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Models\Product;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductExport;
+use App\Exports\ProductTemplateExport;
+use App\Imports\ProductImport;
 
 class ProductController extends Controller
 {
@@ -23,11 +28,68 @@ class ProductController extends Controller
         $this->supplierRepository = $supplierRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->productService->getAllProducts();
+        $products = Product::with(['category', 'supplier'])
+            ->when($request->search, function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('sku', 'like', "%{$request->search}%");
+            })
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
+
+        if ($request->ajax()) {
+            return view('products._table', compact('products'))->render();
+        }
+
         return view('products.index', compact('products'));
     }
+
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(
+            new ProductExport($request->search),
+            'produk-' . now()->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new ProductTemplateExport(), 'template-import-produk.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv'],
+        ]);
+
+        $import = new ProductImport();
+
+        try {
+            $import->import($request->file('file'));
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')
+                ->with('error', 'Gagal membaca file: ' . $e->getMessage());
+        }
+
+        $failures = $import->failures();
+
+        if ($failures->count() > 0) {
+            $errorMessages = $failures->map(function ($failure) {
+                return "Baris {$failure->row()}: " . implode(', ', $failure->errors());
+            })->take(10)->toArray();
+
+            return redirect()->route('products.index')
+                ->with('import_errors', $errorMessages)
+                ->with('import_summary', "{$import->created} produk ditambahkan, {$import->updated} produk diperbarui, {$failures->count()} baris gagal.");
+        }
+
+        return redirect()->route('products.index')
+            ->with('success', "Import berhasil: {$import->created} produk ditambahkan, {$import->updated} produk diperbarui.");
+    }
+
 
     public function create()
     {

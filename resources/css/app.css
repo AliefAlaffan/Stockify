@@ -242,3 +242,97 @@ body {
 .report-card-arrow {
     @apply absolute top-5 right-5 text-steel-light group-hover:text-brand transition-colors;
 }
+
+/* Mesh gradient orbs bergerak */
+@keyframes drift-a { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-30px) scale(1.1); } }
+@keyframes drift-b { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-35px,35px) scale(1.15); } }
+.orb-a { animation: drift-a 11s ease-in-out infinite; }
+.orb-b { animation: drift-b 14s ease-in-out infinite; }
+
+/* Kotak/pallet melayang */
+@keyframes float-crate { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-16px) rotate(2deg); } }
+.crate-float { animation: float-crate 6s ease-in-out infinite; }
+.crate-float-delay { animation: float-crate 7.5s ease-in-out infinite; animation-delay: 1.2s; }
+.crate-float-delay-2 { animation: float-crate 5.5s ease-in-out infinite; animation-delay: 0.6s; }
+
+/* Shake untuk error */
+@keyframes shake-x {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+.animate-shake { animation: shake-x 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+/* Tombol shine sweep */
+.btn-shine { position: relative; overflow: hidden; }
+.btn-shine::after {
+  content: '';
+  position: absolute; top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.65s ease;
+}
+.btn-shine:hover::after { left: 125%; }
+
+/* Input focus glow */
+.input-wrap:focus-within {
+  box-shadow: 0 0 0 4px rgba(47,168,79,0.12);
+  border-radius: 0.75rem;
+}
+
+/* Blinking cursor untuk typewriter */
+@keyframes blink-cursor { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+.typewriter-cursor { animation: blink-cursor 0.9s step-end infinite; }
+
+/* Status dot pulsing lebih hidup */
+@keyframes status-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(47,168,79,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(47,168,79,0); }
+  100% { box-shadow: 0 0 0 0 rgba(47,168,79,0); }
+}
+.status-dot { animation: status-pulse 2s infinite; }
+
+/* Update default stat-card accent ke brand (bukan amber lagi) */
+.stat-card { border-top: 3px solid var(--color-brand); }
+
+/* Icon badge dengan denyut untuk hal mendesak */
+.icon-badge-pulse { position: relative; }
+.icon-badge-pulse::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  animation: badge-ring 2s cubic-bezier(0,0,0.2,1) infinite;
+}
+.icon-badge-pulse.ring-rust::before { background: rgba(193,68,14,0.25); }
+.icon-badge-pulse.ring-amber::before { background: rgba(232,163,61,0.25); }
+@keyframes badge-ring { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.7); opacity: 0; } }
+
+/* Quick action tile */
+.quick-tile { transition: background-color 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
+.quick-tile:hover { background-color: var(--color-canvas-alt); transform: translateY(-2px); border-color: rgba(47,168,79,0.3); }
+
+/* Donut ring */
+.donut-ring { transition: stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1); }
+
+@keyframes count-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+.count-pop { animation: count-pop 0.3s ease; }
+
+/* Mini bar chart untuk distribusi kategori */
+.mini-bar-track { background: var(--color-canvas-alt); border-radius: 999px; overflow: hidden; height: 8px; }
+.mini-bar-fill { height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+
+/* Ring progress lebih besar untuk staff completion */
+.ring-progress { transition: stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+/* Bento card hover halus tanpa loncat berlebihan */
+.bento-card { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.bento-card:hover { box-shadow: 0 8px 24px -8px rgba(22,32,43,0.1); border-color: rgba(47,168,79,0.2); }
+
+/* Divider vertikal halus */
+.v-divider { width: 1px; background: linear-gradient(to bottom, transparent, #E5E9ED, transparent); }

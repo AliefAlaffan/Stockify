@@ -140,7 +140,7 @@
                 </div>
 
                 <!-- DATA MASTER -->
-                @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))
+                @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang', 'Staff Gudang']))
                 <div class="sidebar-item-in" style="animation-delay: 40ms">
                     <button type="button" class="sidebar-group-title flex items-center justify-between w-full px-2 mb-2.5" data-group-toggle="master">
                         <span class="text-[10px] font-semibold tracking-widest text-steel-light uppercase">Data Master</span>
@@ -216,7 +216,7 @@
                         <a href="{{ route('stock-transactions.confirm.incoming') }}"
                             class="nav-link {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
                             <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-transactions.confirm.incoming') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
-                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+                               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V3a1 1 0 012 0v9.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                             </span>
                             <span class="sidebar-label">Konfirmasi Masuk</span>
                        
@@ -224,7 +224,7 @@
                         <a href="{{ route('stock-transactions.confirm.outgoing') }}"
                             class="nav-link {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
                             <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-transactions.confirm.outgoing') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
-                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V17a1 1 0 01-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                             </span>
                             <span class="sidebar-label">Konfirmasi Keluar</span>
                             

@@ -38,14 +38,13 @@ class DashboardController extends Controller
 
     protected function adminDashboard()
     {
-        $totalProducts = $this->productRepository->all()->count();
+        $productsWithRelations = $this->productRepository->allWithRelations();
+        $totalProducts = $productsWithRelations->count();
 
         $allTransactions = $this->stockTransactionRepository->allWithRelations();
-
         $totalIncoming = $allTransactions->where('type', 'Masuk')->count();
         $totalOutgoing = $allTransactions->where('type', 'Keluar')->count();
 
-        // Grafik stok 7 hari terakhir (jumlah transaksi masuk vs keluar per hari)
         $chartData = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
@@ -58,18 +57,31 @@ class DashboardController extends Controller
 
         $recentActivity = $allTransactions->sortByDesc('created_at')->take(8)->values();
 
+        // Distribusi produk per kategori (top 5)
+        $topCategories = $productsWithRelations
+            ->groupBy(fn($p) => $p->category->name ?? 'Tanpa Kategori')
+            ->map(fn($group, $name) => ['name' => $name, 'count' => $group->count()])
+            ->sortByDesc('count')
+            ->take(5)
+            ->values();
+
+        $lowStockCount = $this->stockCalculatorService->getLowStockProducts()->count();
+
         return view('dashboard.admin', compact(
             'totalProducts',
             'totalIncoming',
             'totalOutgoing',
             'chartData',
-            'recentActivity'
+            'recentActivity',
+            'topCategories',
+            'lowStockCount'
         ));
     }
 
     protected function manajerDashboard()
     {
         $lowStockProducts = $this->stockCalculatorService->getLowStockProducts();
+        $totalAllProducts = $this->productRepository->all()->count();
 
         $today = Carbon::today()->format('Y-m-d');
         $allTransactions = $this->stockTransactionRepository->allWithRelations();
@@ -77,7 +89,18 @@ class DashboardController extends Controller
         $incomingToday = $allTransactions->filter(fn($t) => $t->type === 'Masuk' && Carbon::parse($t->date)->format('Y-m-d') === $today)->count();
         $outgoingToday = $allTransactions->filter(fn($t) => $t->type === 'Keluar' && Carbon::parse($t->date)->format('Y-m-d') === $today)->count();
 
-        return view('dashboard.manajer', compact('lowStockProducts', 'incomingToday', 'outgoingToday'));
+        $recentTransactions = $allTransactions->sortByDesc('created_at')->take(5)->values();
+
+        $pendingCount = $allTransactions->where('status', 'Pending')->count();
+
+        return view('dashboard.manajer', compact(
+            'lowStockProducts',
+            'incomingToday',
+            'outgoingToday',
+            'totalAllProducts',
+            'recentTransactions',
+            'pendingCount'
+        ));
     }
 
     protected function staffDashboard()
@@ -85,6 +108,20 @@ class DashboardController extends Controller
         $pendingIncoming = $this->stockTransactionRepository->getPendingByType('Masuk');
         $pendingOutgoing = $this->stockTransactionRepository->getPendingByType('Keluar');
 
-        return view('dashboard.staff', compact('pendingIncoming', 'pendingOutgoing'));
+        $allTransactions = $this->stockTransactionRepository->allWithRelations();
+        $completedToday = $allTransactions
+            ->filter(fn($t) => $t->status !== 'Pending' && Carbon::parse($t->updated_at)->isToday())
+            ->sortByDesc('updated_at')
+            ->values();
+
+        $totalTasksToday = $pendingIncoming->count() + $pendingOutgoing->count() + $completedToday->count();
+        $completionRatio = $totalTasksToday > 0 ? round(($completedToday->count() / $totalTasksToday) * 100) : 100;
+
+        return view('dashboard.staff', compact(
+            'pendingIncoming',
+            'pendingOutgoing',
+            'completedToday',
+            'completionRatio'
+        ));
     }
 }

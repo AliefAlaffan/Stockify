@@ -13,12 +13,16 @@ class UserController extends Controller
     {
         $users = User::when($request->search, function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('email', 'like', "%{$request->search}%");
+                ->orWhere('email', 'like', "%{$request->search}%");
             })
             ->when($request->role, fn ($q) => $q->where('role', $request->role))
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
+
+        if ($request->ajax()) {
+            return view('users._table', compact('users'))->render();
+        }
 
         return view('users.index', compact('users'));
     }

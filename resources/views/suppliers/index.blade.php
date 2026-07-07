@@ -24,62 +24,21 @@
         </button>
     </div>
 
-    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-        @if ($suppliers->count() > 0)
-            <table class="w-full text-sm text-left">
-                <thead class="bg-canvas-alt/70 text-[11px] text-steel uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-3.5 font-semibold">Nama</th>
-                        <th class="px-6 py-3.5 font-semibold">Alamat</th>
-                        <th class="px-6 py-3.5 font-semibold">Telepon</th>
-                        <th class="px-6 py-3.5 font-semibold">Email</th>
-                        <th class="px-6 py-3.5 font-semibold text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @foreach ($suppliers as $supplier)
-                        <tr class="table-row hover:bg-canvas-alt/40">
-                            <td class="px-6 py-4">
-                                <span class="font-medium text-ink">{{ $supplier->name }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-ink-soft max-w-xs truncate">{{ $supplier->address ?? '—' }}</td>
-                            <td class="px-6 py-4 text-ink-soft font-mono-data text-xs">{{ $supplier->phone ?? '—' }}</td>
-                            <td class="px-6 py-4 text-ink-soft">{{ $supplier->email ?? '—' }}</td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="inline-flex items-center gap-1">
-                                    <button type="button"
-                                        data-modal-target="modal-edit-supplier"
-                                        data-modal-toggle="modal-edit-supplier"
-                                        onclick="fillEditSupplierModal({{ $supplier->id }}, '{{ addslashes($supplier->name) }}', '{{ addslashes($supplier->address ?? '') }}', '{{ addslashes($supplier->phone ?? '') }}', '{{ addslashes($supplier->email ?? '') }}')"
-                                        class="icon-btn text-freight hover:bg-freight/10" title="Edit">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 3.5a1.914 1.914 0 012.706 2.706L6.5 15.914 3 16.5l.586-3.5 9.914-9.5z"/></svg>
-                                    </button>
-                                    <button type="button"
-                                        data-modal-target="modal-delete-supplier"
-                                        data-modal-toggle="modal-delete-supplier"
-                                        onclick="document.getElementById('form-delete-supplier').action = '{{ route('suppliers.destroy', $supplier->id) }}'; document.getElementById('delete-supplier-name').textContent = '{{ addslashes($supplier->name) }}'"
-                                        class="icon-btn text-rust hover:bg-rust/10" title="Hapus">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @else
-            <div class="flex flex-col items-center justify-center py-16 px-6 text-center">
-                <div class="empty-icon bg-canvas-alt mb-4">
-                    <svg class="w-8 h-8 text-steel-light" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 7l2-3h14l2 3M3 7v11a1 1 0 001 1h16a1 1 0 001-1V7M3 7h18M8 11h8"/></svg>
-                </div>
-                <p class="font-medium text-ink mb-1">Belum ada supplier</p>
-                <p class="text-sm text-steel mb-4">Tambahkan supplier untuk mulai mencatat sumber barang.</p>
-                <button type="button" data-modal-target="modal-add-supplier" data-modal-toggle="modal-add-supplier"
-                    class="btn-primary px-4 py-2 text-sm font-semibold text-white rounded-xl">
-                    Tambah Supplier Pertama
-                </button>
-            </div>
-        @endif
+    <div class="relative mb-5 max-w-sm">
+        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-steel-light pointer-events-none" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M17.5 17.5l-3.6-3.6m1.9-4.65a6.55 6.55 0 11-13.1 0 6.55 6.55 0 0113.1 0z"/>
+        </svg>
+        <input type="text" id="search-input" value="{{ request('search') }}"
+            placeholder="Cari nama, telepon, atau email supplier..."
+            class="bg-white border border-gray-200 text-ink text-sm rounded-xl focus:ring-2 focus:ring-brand/30 focus:border-brand block w-full pl-10 pr-9 py-2.5 transition-colors">
+        <button type="button" id="search-clear"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-steel-light hover:text-steel {{ request('search') ? '' : 'hidden' }}">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+        </button>
+    </div>
+
+    <div id="table-container">
+        @include('suppliers._table', ['suppliers' => $suppliers])
     </div>
 
     <!-- Modal Tambah -->
@@ -208,4 +167,6 @@
             document.getElementById('form-edit-supplier').action = `/suppliers/${id}`;
         }
     </script>
+
+    @include('components.live-search-script', ['baseUrl' => route('suppliers.index')])
 </x-app-layout>

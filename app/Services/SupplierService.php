@@ -14,9 +14,16 @@ class SupplierService
         $this->supplierRepository = $supplierRepository;
     }
 
-    public function getAllSuppliers()
+    public function getAllSuppliers(?string $search = null, int $perPage = 15)
     {
-        return $this->supplierRepository->all();
+        return \App\Models\Supplier::when($search, function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getSupplierById(int $id)

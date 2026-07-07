@@ -14,9 +14,14 @@ class SupplierController extends Controller
         $this->supplierService = $supplierService;
     }
 
-    public function index()
+   public function index(Request $request)
     {
-        $suppliers = $this->supplierService->getAllSuppliers();
+        $suppliers = $this->supplierService->getAllSuppliers($request->search);
+
+        if ($request->ajax()) {
+            return view('suppliers._table', compact('suppliers'))->render();
+        }
+
         return view('suppliers.index', compact('suppliers'));
     }
 
