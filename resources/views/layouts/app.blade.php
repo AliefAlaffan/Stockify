@@ -233,7 +233,7 @@
                 @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))
                 <div class="sidebar-item-in" style="animation-delay: 120ms">
                     <p class="sidebar-group-title px-2 mb-2.5 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Laporan</p>
-                    <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
+                    <a href="{{ route('reports.index') }}" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
                         <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
                             <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V4z" clip-rule="evenodd"/></svg>
                         </span>

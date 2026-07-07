@@ -9,6 +9,8 @@ use App\Http\Controllers\ProductAttributeController;
 use App\Http\Controllers\StockTransactionController;
 use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;    
 
 /*
 |--------------------------------------------------------------------------
@@ -35,21 +37,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Admin Only Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['role:Admin'])->group(function () {
-
-        Route::resource('categories', CategoryController::class)->except(['create', 'edit']);
-
-       Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
-
-        // ...
-    });
-
-
     Route::middleware(['role:Admin,Manajer Gudang'])->group(function () {
 
         Route::resource('products', ProductController::class);
@@ -62,6 +49,30 @@ Route::middleware('auth')->group(function () {
             ->name('products.attributes.update');
         Route::delete('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'destroy'])
             ->name('products.attributes.destroy');
+
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('index');
+
+            Route::get('/stock', [ReportController::class, 'stock'])->name('stock');
+            Route::get('/stock/export/pdf', [ReportController::class, 'stockExportPdf'])->name('stock.export.pdf');
+            Route::get('/stock/export/excel', [ReportController::class, 'stockExportExcel'])->name('stock.export.excel');
+
+            Route::get('/transactions', [ReportController::class, 'transactions'])->name('transactions');
+            Route::get('/transactions/export/pdf', [ReportController::class, 'transactionsExportPdf'])->name('transactions.export.pdf');
+            Route::get('/transactions/export/excel', [ReportController::class, 'transactionsExportExcel'])->name('transactions.export.excel');
+        });
+    });
+
+    Route::middleware(['role:Admin'])->group(function () {
+
+        Route::resource('categories', CategoryController::class)->except(['create', 'edit']);
+        Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
+
+        Route::get('/reports/user-activity', [ReportController::class, 'userActivity'])->name('reports.user-activity');
+        Route::get('/reports/user-activity/export/pdf', [ReportController::class, 'userActivityExportPdf'])->name('reports.user-activity.export.pdf');
+        Route::get('/reports/user-activity/export/excel', [ReportController::class, 'userActivityExportExcel'])->name('reports.user-activity.export.excel');
+        
+        Route::resource('users', UserController::class)->except(['show']);
     });
 
     /*

@@ -232,3 +232,13 @@ body {
 .animate-ping-slow {
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+.report-card {
+    @apply relative block bg-white rounded-2xl border border-gray-100 shadow-sm p-5 transition-all duration-150;
+}
+.report-card:hover {
+    @apply shadow-md border-brand/20 -translate-y-0.5;
+}
+.report-card-arrow {
+    @apply absolute top-5 right-5 text-steel-light group-hover:text-brand transition-colors;
+}
