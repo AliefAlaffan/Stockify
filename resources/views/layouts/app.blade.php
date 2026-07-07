@@ -248,12 +248,12 @@
                 <div class="sidebar-item-in" style="animation-delay: 160ms">
                     <p class="sidebar-group-title px-2 mb-2.5 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Sistem</p>
                     <div class="space-y-1.5">
-                        <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
-                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
+                        <a href="{{ route('users.index') }}"
+                            class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('users.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('users.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
                             </span>
                             <span class="sidebar-label">Pengguna</span>
-                            
                         </a>
                         <a href="#" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
                             <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
