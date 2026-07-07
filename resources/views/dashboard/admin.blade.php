@@ -74,7 +74,7 @@
             <ul class="space-y-4">
                 @forelse ($recentActivity as $activity)
                     <li class="timeline-item relative pl-5">
-                        <span class="timeline-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full border-2 border-white ring-2 {{ $activity->type === 'Masuk' ? 'bg-depot ring-depot/20' : 'bg-rust ring-rust/20' }}"></span>
+                        <span class="animate-pulse timeline-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full border-2 border-white ring-2 {{ $activity->type === 'Masuk' ? 'bg-depot ring-depot/20' : 'bg-rust ring-rust/20' }}"></span>
                         <p class="text-sm text-ink-soft leading-snug">
                             <span class="font-semibold text-ink">{{ $activity->user->name ?? '-' }}</span>
                             {{ $activity->type === 'Masuk' ? 'mencatat barang masuk' : 'mencatat barang keluar' }}

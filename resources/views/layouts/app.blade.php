@@ -16,48 +16,97 @@
 </head>
 <body class="bg-canvas font-body text-ink antialiased">
 
-    <!-- Navbar -->
+   <!-- Navbar -->
     <nav class="bg-white border-b border-gray-200/80 fixed z-30 w-full">
         <div class="px-4 py-2.5 lg:px-5">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 pr-3 mr-1 border-r border-gray-200">
+
+                 <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{{ route('dashboard') }}" class="flex items-center">
                         <img src="{{ asset('images/stockify-logo-full.png') }}" alt="Stockify" class="h-10 w-auto object-contain">
                     </a>
                 </div>
 
+                <!-- Kanan: Jam, Role, Profil -->
                 <div class="flex items-center gap-3">
+
+                    <!-- Jam & Tanggal Live -->
+                    <div class="hidden md:flex items-center gap-2.5 pr-3 mr-1 border-r border-gray-200">
+                        <div class="icon-badge w-8 h-8 !rounded-lg bg-canvas-alt">
+                            <svg class="w-4 h-4 text-steel" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 5.5V10l3 1.5M17.5 10a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"/>
+                            </svg>
+                        </div>
+                        <div class="leading-tight">
+                            <p id="live-date" class="text-xs font-medium text-ink-soft">—</p>
+                            <p id="live-time" class="font-mono-data text-sm font-semibold text-ink tabular-nums">--:--:--</p>
+                        </div>
+                    </div>
+
+                    <!-- Role Badge -->
                     <span class="hidden sm:inline-flex stock-tag bg-canvas-alt text-ink-soft">
-                        <span class="stock-tag-dot bg-brand"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
                         {{ strtoupper(auth()->user()->role) }}
                     </span>
 
+                    <!-- Profil Dropdown -->
                     <div>
-                        <button type="button" class="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-full hover:bg-canvas-alt"
-                            id="user-menu-button" data-dropdown-toggle="dropdown-user">
-                            <div class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center font-display font-semibold text-sm">
+                        <button type="button" class="flex items-center gap-2 pl-1 pr-1.5 py-1 rounded-full border border-transparent hover:border-gray-200 hover:bg-canvas-alt transition-colors"
+                            id="user-menu-button" data-dropdown-toggle="dropdown-user" data-dropdown-placement="bottom-end">
+                            <div class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center font-display font-semibold text-sm ring-2 ring-white shadow-sm">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
-                            <svg class="w-3.5 h-3.5 text-steel" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-3.5 h-3.5 text-steel mr-0.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"></path>
                             </svg>
                         </button>
 
-                        <div class="hidden z-50 my-2 w-56 text-base bg-white divide-y divide-gray-100 rounded-xl shadow-lg border border-gray-100" id="dropdown-user">
-                            <div class="px-4 py-3">
-                                <p class="text-sm font-semibold text-ink">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-steel truncate">{{ auth()->user()->email }}</p>
+                        <div class="hidden z-50 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden" id="dropdown-user">
+                            <!-- Header -->
+                            <div class="flex items-center gap-3 px-4 py-3.5 bg-canvas-alt/60">
+                                <div class="w-10 h-10 rounded-xl bg-ink text-white flex items-center justify-center font-display font-semibold text-sm flex-shrink-0">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-ink truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-steel truncate">{{ auth()->user()->email }}</p>
+                                </div>
                             </div>
-                            <ul class="py-1">
-                                <li><a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-ink-soft hover:bg-canvas-alt">Profil Saya</a></li>
+
+                            <!-- Role tag -->
+                            <div class="px-4 py-2.5 border-b border-gray-100">
+                                <span class="stock-tag bg-canvas-alt text-ink-soft">
+                                    <span class="stock-tag-dot bg-brand"></span>
+                                    {{ strtoupper(auth()->user()->role) }}
+                                </span>
+                            </div>
+
+                            <!-- Menu items -->
+                            <ul class="py-1.5">
                                 <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"
-                                            class="block px-4 py-2 text-sm text-rust hover:bg-canvas-alt">Keluar</a>
-                                    </form>
+                                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-soft hover:bg-canvas-alt transition-colors">
+                                        <svg class="w-4 h-4 text-steel" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 6.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zM3.5 17.25c0-3.176 2.91-5.75 6.5-5.75s6.5 2.574 6.5 5.75"/>
+                                        </svg>
+                                        Profil Saya
+                                    </a>
                                 </li>
                             </ul>
+
+                            <!-- Logout -->
+                            <div class="p-1.5 border-t border-gray-100">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"
+                                        class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-rust hover:bg-rust/8 transition-colors">
+                                        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M7 15.5H4.5A1.5 1.5 0 013 14V6a1.5 1.5 0 011.5-1.5H7M13 13.5l3.5-3.5-3.5-3.5M16.5 10H7.5"/>
+                                        </svg>
+                                        Keluar
+                                    </a>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -219,29 +268,6 @@
 
             </nav>
 
-            <!-- User card + Logout -->
-            <div class="px-4 pt-4 mt-2 border-t border-gray-100 space-y-2">
-                <div class="sidebar-user-info flex items-center gap-3 p-3 rounded-2xl bg-canvas-alt">
-                    <div class="w-9 h-9 rounded-xl bg-ink text-white flex items-center justify-center font-display font-semibold text-sm flex-shrink-0">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-sm font-semibold text-ink truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-steel truncate">{{ auth()->user()->role }}</p>
-                    </div>
-                </div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"
-                        class="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-rust/10 text-rust text-sm font-semibold hover:bg-rust/[0.16] transition-colors">
-                        <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M7 15.5H4.5A1.5 1.5 0 013 14V6a1.5 1.5 0 011.5-1.5H7M13 13.5l3.5-3.5-3.5-3.5M16.5 10H7.5"/>
-                        </svg>
-                        <span class="sidebar-label">Keluar</span>
-                    </a>
-                </form>
-            </div>
         </div>
     </aside>
 
@@ -258,6 +284,19 @@
                 btn.parentElement.classList.toggle('group-collapsed');
             });
         });
+        function updateLiveClock() {
+            const now = new Date();
+            const dateFormatter = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+            const timeFormatter = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+
+            const dateEl = document.getElementById('live-date');
+            const timeEl = document.getElementById('live-time');
+            if (dateEl) dateEl.textContent = dateFormatter.format(now);
+            if (timeEl) timeEl.textContent = timeFormatter.format(now);
+        }
+
+        updateLiveClock();
+        setInterval(updateLiveClock, 1000);
     </script>
 </body>
 </html>
