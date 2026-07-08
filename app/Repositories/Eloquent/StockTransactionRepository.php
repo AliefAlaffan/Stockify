@@ -28,7 +28,7 @@ class StockTransactionRepository extends BaseRepository implements StockTransact
 
     public function allWithRelations()
     {
-        return $this->model->with(['product', 'user'])->latest('date')->get();
+        return $this->model->with(['product.supplier', 'product.category', 'user'])->get();
     }
 
     public function findWithRelations(int $id)

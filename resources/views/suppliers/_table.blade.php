@@ -7,7 +7,9 @@
                     <th class="px-6 py-3.5 font-semibold">Alamat</th>
                     <th class="px-6 py-3.5 font-semibold">Telepon</th>
                     <th class="px-6 py-3.5 font-semibold">Email</th>
+                    @if (auth()->user()->role === 'Admin')  
                     <th class="px-6 py-3.5 font-semibold text-right">Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
@@ -19,6 +21,7 @@
                         <td class="px-6 py-4 text-ink-soft max-w-xs truncate">{{ $supplier->address ?? '—' }}</td>
                         <td class="px-6 py-4 text-ink-soft font-mono-data text-xs">{{ $supplier->phone ?? '—' }}</td>
                         <td class="px-6 py-4 text-ink-soft">{{ $supplier->email ?? '—' }}</td>
+                        @if (auth()->user()->role === 'Admin')
                         <td class="px-6 py-4 text-right">
                             <div class="inline-flex items-center gap-1">
                                 <button type="button"
@@ -37,6 +40,7 @@
                                 </button>
                             </div>
                         </td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>

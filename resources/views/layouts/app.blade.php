@@ -11,7 +11,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -140,7 +140,7 @@
                 </div>
 
                 <!-- DATA MASTER -->
-                @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang', 'Staff Gudang']))
+                @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang',]))
                 <div class="sidebar-item-in" style="animation-delay: 40ms">
                     <button type="button" class="sidebar-group-title flex items-center justify-between w-full px-2 mb-2.5" data-group-toggle="master">
                         <span class="text-[10px] font-semibold tracking-widest text-steel-light uppercase">Data Master</span>
@@ -155,6 +155,14 @@
                             <span class="sidebar-label">Produk</span>
                         
                         </a>
+                        <a href="{{ route('suppliers.index') }}"
+                            class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('suppliers.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('suppliers.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
+                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"/></svg>
+                            </span>
+                            <span class="sidebar-label">Supplier</span>
+                           
+                        </a>
                         @if(auth()->user()->role === 'Admin')
                         <a href="{{ route('categories.index') }}"
                             class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('categories.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
@@ -163,14 +171,6 @@
                             </span>
                             <span class="sidebar-label">Kategori</span>
                         
-                        </a>
-                        <a href="{{ route('suppliers.index') }}"
-                            class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('suppliers.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
-                            <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('suppliers.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
-                                <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"/></svg>
-                            </span>
-                            <span class="sidebar-label">Supplier</span>
-                           
                         </a>
                         @endif
                     </div>
@@ -238,8 +238,8 @@
                 @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))
                 <div class="sidebar-item-in" style="animation-delay: 120ms">
                     <p class="sidebar-group-title px-2 mb-2.5 text-[10px] font-semibold tracking-widest text-steel-light uppercase">Laporan</p>
-                    <a href="{{ route('reports.index') }}" class="nav-link flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm text-ink-soft font-medium">
-                        <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-steel">
+                    <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.index') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('reports.index') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
+                        <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('reports.index') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
                             <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V4z" clip-rule="evenodd"/></svg>
                         </span>
                         <span class="sidebar-label">Laporan</span>

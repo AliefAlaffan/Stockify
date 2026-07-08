@@ -31,6 +31,7 @@
             <p class="font-mono-data text-[11px] tracking-widest text-steel uppercase mb-1">Data Master</p>
             <h1 class="font-display text-xl font-semibold text-ink">Supplier</h1>
         </div>
+        @if(auth()->user()->role === 'Admin')
         <div class="flex items-center gap-2">
             <a href="{{ route('suppliers.export', request()->only('search')) }}"
                 class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
@@ -50,6 +51,7 @@
                 Tambah Supplier
             </button>
         </div>
+        @endif
     </div>
 
     <div class="relative mb-5 max-w-sm">
@@ -115,6 +117,7 @@
     </div>
 
     <!-- Modal Edit -->
+    @if (auth()->user()->role === 'Admin')
     <div id="modal-edit-supplier" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-ink/20 modal-backdrop">
         <div class="modal-panel relative w-full max-w-md">
             <div class="relative bg-white rounded-2xl shadow-xl">
@@ -185,6 +188,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Modal Import -->
     <div id="modal-import-supplier" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-ink/20 modal-backdrop">

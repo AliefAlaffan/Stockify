@@ -176,12 +176,75 @@
                     <div class="icon-badge w-9 h-9 !rounded-lg bg-amber/12"><svg class="w-4 h-4 text-amber-dark" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"/></svg></div>
                     <span class="text-[11px] font-medium text-ink-soft leading-tight">Kelola Supplier</span>
                 </a>
-                <a href="#" class="quick-tile flex flex-col items-center text-center gap-2 p-3.5 rounded-xl border border-gray-100">
+                <a href="{{ route('reports.index') }}" class="quick-tile flex flex-col items-center text-center gap-2 p-3.5 rounded-xl border border-gray-100">
                     <div class="icon-badge w-9 h-9 !rounded-lg bg-steel/10"><svg class="w-4 h-4 text-steel" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V4z" clip-rule="evenodd"/></svg></div>
                     <span class="text-[11px] font-medium text-ink-soft leading-tight">Lihat Laporan</span>
                 </a>
             </div>
         </div>
+    </div>
+
+    <!-- Row 4: Top Produk + Nilai Inventori + Performa Supplier -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+
+        <!-- Top 5 Produk Terlaris -->
+        <div class="bento-card animate-fade-up bg-white rounded-2xl border border-gray-100 overflow-hidden" style="animation-delay: 420ms">
+            <div class="p-5 border-b border-gray-100">
+                <p class="font-mono-data text-[10px] tracking-widest text-steel uppercase">Terlaris</p>
+                <h3 class="font-display font-semibold text-ink mt-0.5">Top 5 Produk</h3>
+            </div>
+            <div class="divide-y divide-gray-50">
+                @forelse ($topProducts as $i => $product)
+                    <div class="flex items-center gap-3 p-4">
+                        <span class="flex items-center justify-center w-6 h-6 rounded-full bg-canvas-alt text-ink-soft text-xs font-semibold flex-shrink-0">{{ $i + 1 }}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-ink truncate">{{ $product['name'] }}</p>
+                            <div class="mini-bar-track mt-1.5">
+                                <div class="mini-bar-fill" style="width: {{ round(($product['total_out'] / $maxSold) * 100) }}%; background: #C1440E;"></div>
+                            </div>
+                        </div>
+                        <span class="font-mono-data text-xs font-semibold text-ink flex-shrink-0">{{ $product['total_out'] }} pcs</span>
+                    </div>
+                @empty
+                    <p class="text-sm text-steel-light text-center py-8">Belum ada data penjualan</p>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Nilai Total Inventori -->
+        <div class="bento-card animate-fade-up bg-white p-5 rounded-2xl border border-gray-100 flex flex-col justify-center items-center text-center" style="animation-delay: 460ms">
+            <div class="icon-badge bg-brand/12 mb-3">
+                <svg class="w-5 h-5 text-brand-dark" fill="currentColor" viewBox="0 0 20 20"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/></svg>
+            </div>
+            <p class="text-xs font-medium text-steel uppercase tracking-wide">Nilai Total Inventori</p>
+            <p class="font-display text-2xl font-bold text-ink mt-2">Rp {{ number_format($totalInventoryValue, 0, ',', '.') }}</p>
+            <p class="text-xs text-steel-light mt-1">Berdasarkan harga beli × stok saat ini</p>
+        </div>
+
+        <!-- Performa Supplier -->
+        <div class="bento-card animate-fade-up bg-white rounded-2xl border border-gray-100 overflow-hidden" style="animation-delay: 500ms">
+            <div class="p-5 border-b border-gray-100">
+                <p class="font-mono-data text-[10px] tracking-widest text-steel uppercase">Sumber Barang</p>
+                <h3 class="font-display font-semibold text-ink mt-0.5">Performa Supplier</h3>
+            </div>
+            <div class="divide-y divide-gray-50">
+                @forelse ($supplierPerformance as $supplier)
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <p class="text-sm font-medium text-ink truncate">{{ $supplier['name'] }}</p>
+                            <span class="font-mono-data text-xs text-steel flex-shrink-0">{{ $supplier['total_supplied'] }} pcs</span>
+                        </div>
+                        <div class="mini-bar-track">
+                            <div class="mini-bar-fill" style="width: {{ round(($supplier['total_supplied'] / $maxSupplied) * 100) }}%; background: #1E5AA8;"></div>
+                        </div>
+                        <p class="text-[11px] text-steel-light mt-1">{{ $supplier['transaction_count'] }} transaksi</p>
+                    </div>
+                @empty
+                    <p class="text-sm text-steel-light text-center py-8">Belum ada data supplier</p>
+                @endforelse
+            </div>
+        </div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>

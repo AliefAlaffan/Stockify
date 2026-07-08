@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'destroy'])
             ->name('products.attributes.destroy');
 
+        Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
+
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('index');
 
@@ -75,7 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/categories-import-template', [CategoryController::class, 'downloadTemplate'])->name('categories.import.template');
         Route::post('/categories-import', [CategoryController::class, 'import'])->name('categories.import');
         
-        Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
+        
         Route::get('/suppliers-export', [SupplierController::class, 'exportExcel'])->name('suppliers.export');
         Route::get('/suppliers-import-template', [SupplierController::class, 'downloadTemplate'])->name('suppliers.import.template');
         Route::post('/suppliers-import', [SupplierController::class, 'import'])->name('suppliers.import');
