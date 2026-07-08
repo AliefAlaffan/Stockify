@@ -76,6 +76,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/categories-import', [CategoryController::class, 'import'])->name('categories.import');
         
         Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
+        Route::get('/suppliers-export', [SupplierController::class, 'exportExcel'])->name('suppliers.export');
+        Route::get('/suppliers-import-template', [SupplierController::class, 'downloadTemplate'])->name('suppliers.import.template');
+        Route::post('/suppliers-import', [SupplierController::class, 'import'])->name('suppliers.import');
 
         Route::get('/reports/user-activity', [ReportController::class, 'userActivity'])->name('reports.user-activity');
         Route::get('/reports/user-activity/export/pdf', [ReportController::class, 'userActivityExportPdf'])->name('reports.user-activity.export.pdf');

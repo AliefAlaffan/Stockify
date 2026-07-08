@@ -8,28 +8,44 @@
         </div>
     @endif
 
+    @if (session('import_summary'))
+        <div class="flex items-start gap-2.5 p-4 mb-5 text-sm rounded-2xl {{ session('import_errors') ? 'text-amber-dark bg-amber/8 border border-amber/15' : 'text-brand-dark bg-brand/8 border border-brand/15' }} animate-fade-up" role="alert">
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M10 6v4m0 4h.01M19 10a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div>
+                <p class="font-medium">{{ session('import_summary') }}</p>
+                @if (session('import_errors'))
+                    <ul class="mt-2 space-y-1 text-xs list-disc list-inside">
+                        @foreach (session('import_errors') as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    @endif
+
     <div class="flex items-center justify-between mb-5">
         <div>
             <p class="font-mono-data text-[11px] tracking-widest text-steel uppercase mb-1">Data Master</p>
             <h1 class="font-display text-xl font-semibold text-ink">Kategori Produk</h1>
         </div>
         <div class="flex items-center gap-2">
-                <a href="{{ route('products.export', request()->only('search')) }}"
-                    class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
-                    Export
-                </a>
-                <button type="button" data-modal-target="modal-import-product" data-modal-toggle="modal-import-product"
-                    class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 13V3m0 0L6.5 6.5M10 3l3.5 3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
-                    Import
-                </button>
-                <a href="{{ route('products.create') }}"
-                    class="btn-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/></svg>
-                    Tambah Kategori
-                </a>
-            </div>
+            <a href="{{ route('categories.export', request()->only('search')) }}"
+                class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
+                Export
+            </a>
+            <button type="button" data-modal-target="modal-import-category" data-modal-toggle="modal-import-category"
+                class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 13V3m0 0L6.5 6.5M10 3l3.5 3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
+                Import
+            </button>
+            <button type="button" data-modal-target="modal-add-category" data-modal-toggle="modal-add-category"
+                class="btn-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+                Tambah Kategori
+            </button>
+        </div>
     </div>
 
     <div class="relative mb-5 max-w-sm">
@@ -134,6 +150,47 @@
                         @method('DELETE')
                         <button type="button" data-modal-hide="modal-delete-category" class="flex-1 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">Batal</button>
                         <button type="submit" class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-rust rounded-xl hover:bg-rust/90 transition-colors shadow-sm shadow-rust/30">Ya, Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Import -->
+    <div id="modal-import-category" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-ink/20 modal-backdrop">
+        <div class="modal-panel relative w-full max-w-md">
+            <div class="relative bg-white rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                    <h3 class="font-display text-lg font-semibold text-ink">Import Kategori</h3>
+                    <button type="button" data-modal-hide="modal-import-category" class="icon-btn text-steel hover:bg-canvas-alt">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+                    </button>
+                </div>
+
+                <div class="p-5 space-y-4">
+                    <div class="flex items-start gap-2.5 p-3 bg-canvas-alt/60 rounded-xl">
+                        <svg class="w-4 h-4 text-steel flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M10 6v4m0 4h.01M19 10a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <p class="text-xs text-steel leading-relaxed">
+                            Kategori dengan nama yang sudah ada akan <strong>diperbarui</strong>, nama baru akan <strong>ditambahkan</strong>.
+                        </p>
+                    </div>
+
+                    <a href="{{ route('categories.import.template') }}" class="flex items-center gap-2 text-sm font-medium text-brand-dark hover:underline">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
+                        Download Template Excel
+                    </a>
+
+                    <form action="{{ route('categories.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <label class="block mb-1.5 text-sm font-medium text-ink">Pilih File (.xlsx, .xls, .csv)</label>
+                        <input type="file" name="file" accept=".xlsx,.xls,.csv" required
+                            class="bg-canvas-alt/60 border border-gray-200 text-ink text-sm rounded-xl focus:ring-2 focus:ring-brand/30 focus:border-brand block w-full p-2.5 transition-colors file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand/10 file:text-brand-dark">
+                        @error('file') <p class="mt-1.5 text-sm text-rust">{{ $message }}</p> @enderror
+
+                        <div class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-gray-100">
+                            <button type="button" data-modal-hide="modal-import-category" class="px-4 py-2 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">Batal</button>
+                            <button type="submit" class="btn-primary px-4 py-2 text-sm font-semibold text-white rounded-xl">Upload & Import</button>
+                        </div>
                     </form>
                 </div>
             </div>
