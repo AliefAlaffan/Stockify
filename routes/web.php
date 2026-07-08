@@ -71,6 +71,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:Admin'])->group(function () {
 
         Route::resource('categories', CategoryController::class)->except(['create', 'edit']);
+        Route::get('/categories-export', [CategoryController::class, 'exportExcel'])->name('categories.export');
+        Route::get('/categories-import-template', [CategoryController::class, 'downloadTemplate'])->name('categories.import.template');
+        Route::post('/categories-import', [CategoryController::class, 'import'])->name('categories.import');
+        
         Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
 
         Route::get('/reports/user-activity', [ReportController::class, 'userActivity'])->name('reports.user-activity');

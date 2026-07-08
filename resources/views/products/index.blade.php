@@ -29,9 +29,6 @@
             <p class="font-mono-data text-[11px] tracking-widest text-steel uppercase mb-1">Data Master</p>
             <h1 class="font-display text-xl font-semibold text-ink">Produk</h1>
         </div>
-       <div class="flex items-center justify-between mb-5">
-    <div>
-            </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('products.export', request()->only('search')) }}"
                     class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
@@ -49,7 +46,6 @@
                     Tambah Produk
                 </a>
             </div>
-        </div>
     </div>
 
     <!-- Search Bar -->

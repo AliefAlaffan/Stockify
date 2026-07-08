@@ -13,11 +13,23 @@
             <p class="font-mono-data text-[11px] tracking-widest text-steel uppercase mb-1">Data Master</p>
             <h1 class="font-display text-xl font-semibold text-ink">Kategori Produk</h1>
         </div>
-        <button type="button" data-modal-target="modal-add-category" data-modal-toggle="modal-add-category"
-            class="btn-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/></svg>
-            Tambah Kategori
-        </button>
+        <div class="flex items-center gap-2">
+                <a href="{{ route('products.export', request()->only('search')) }}"
+                    class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
+                    Export
+                </a>
+                <button type="button" data-modal-target="modal-import-product" data-modal-toggle="modal-import-product"
+                    class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 13V3m0 0L6.5 6.5M10 3l3.5 3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
+                    Import
+                </button>
+                <a href="{{ route('products.create') }}"
+                    class="btn-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+                    Tambah Kategori
+                </a>
+            </div>
     </div>
 
     <div class="relative mb-5 max-w-sm">
