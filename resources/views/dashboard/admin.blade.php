@@ -43,8 +43,8 @@
         <div class="bento-card stat-card stat-depot animate-fade-up bg-white p-5 rounded-2xl border border-gray-100" style="animation-delay: 60ms">
             <div class="flex items-start justify-between">
                 <div>
-                    <p class="text-xs font-medium text-steel uppercase tracking-wide">Transaksi Masuk</p>
-                    <p class="font-display text-3xl font-bold text-depot mt-2"><span class="stat-count" data-target="{{ $totalIncoming }}">0</span></p>
+                    <p class="text-xs font-medium text-steel uppercase tracking-wide">Total Kategori</p>
+                    <p class="font-display text-3xl font-bold text-depot mt-2"><span class="stat-count" data-target="{{ $totalCategories }}">0</span></p>
                 </div>
                 <div class="icon-badge bg-depot/15">
                     <svg class="w-5 h-5 text-depot" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V3a1 1 0 012 0v9.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
@@ -59,8 +59,8 @@
         <div class="bento-card stat-card stat-rust animate-fade-up bg-white p-5 rounded-2xl border border-gray-100" style="animation-delay: 120ms">
             <div class="flex items-start justify-between">
                 <div>
-                    <p class="text-xs font-medium text-steel uppercase tracking-wide">Transaksi Keluar</p>
-                    <p class="font-display text-3xl font-bold text-rust mt-2"><span class="stat-count" data-target="{{ $totalOutgoing }}">0</span></p>
+                    <p class="text-xs font-medium text-steel uppercase tracking-wide">Total Supplier</p>
+                    <p class="font-display text-3xl font-bold text-rust mt-2"><span class="stat-count" data-target="{{ $totalSuppliers }}">0</span></p>
                 </div>
                 <div class="icon-badge bg-rust/15">
                     <svg class="w-5 h-5 text-rust" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V17a1 1 0 01-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
