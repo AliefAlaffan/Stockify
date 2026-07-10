@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ProductService;
+use App\Services\StockCalculatorService;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\SupplierRepositoryInterface;
 use Illuminate\Http\Request;
@@ -15,15 +16,18 @@ use App\Imports\ProductImport;
 class ProductController extends Controller
 {
     protected ProductService $productService;
+    protected StockCalculatorService $stockCalculatorService;
     protected CategoryRepositoryInterface $categoryRepository;
     protected SupplierRepositoryInterface $supplierRepository;
 
     public function __construct(
         ProductService $productService,
+        StockCalculatorService $stockCalculatorService,
         CategoryRepositoryInterface $categoryRepository,
         SupplierRepositoryInterface $supplierRepository
     ) {
         $this->productService = $productService;
+        $this->stockCalculatorService = $stockCalculatorService;
         $this->categoryRepository = $categoryRepository;
         $this->supplierRepository = $supplierRepository;
     }
@@ -38,6 +42,11 @@ class ProductController extends Controller
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
+
+        $products->getCollection()->transform(function ($product) {
+            $product->current_stock = $this->stockCalculatorService->getCurrentStock($product->id);
+            return $product;
+        });
 
         if ($request->ajax()) {
             return view('products._table', compact('products'))->render();
@@ -89,7 +98,6 @@ class ProductController extends Controller
         return redirect()->route('products.index')
             ->with('success', "Import berhasil: {$import->created} produk ditambahkan, {$import->updated} produk diperbarui.");
     }
-
 
     public function create()
     {

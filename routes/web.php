@@ -68,6 +68,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/transactions/export/pdf', [ReportController::class, 'transactionsExportPdf'])->name('transactions.export.pdf');
             Route::get('/transactions/export/excel', [ReportController::class, 'transactionsExportExcel'])->name('transactions.export.excel');
         });
+
+        Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
+        Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
     });
 
     Route::middleware(['role:Admin'])->group(function () {
@@ -108,9 +111,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/stock-transactions/out', [StockTransactionController::class, 'indexOut'])->name('stock-transactions.out.index');
         Route::get('/stock-transactions/out/create', [StockTransactionController::class, 'createOut'])->name('stock-transactions.out.create');
         Route::post('/stock-transactions/out', [StockTransactionController::class, 'storeOut'])->name('stock-transactions.out.store');
-
-        Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
-        Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
     });
 
     /*
@@ -135,6 +135,21 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware(['role:Staff Gudang'])->group(function () {
+
+        Route::resource('products', ProductController::class);
+
+        Route::get('/products-export', [ProductController::class, 'exportExcel'])->name('products.export');
+        Route::get('/products-import-template', [ProductController::class, 'downloadTemplate'])->name('products.import.template');
+        Route::post('/products-import', [ProductController::class, 'import'])->name('products.import');
+
+        Route::get('/products/{product}/attributes', [ProductAttributeController::class, 'index'])
+            ->name('products.attributes.index');
+        Route::post('/products/{product}/attributes', [ProductAttributeController::class, 'store'])
+            ->name('products.attributes.store');
+        Route::put('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'update'])
+            ->name('products.attributes.update');
+        Route::delete('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'destroy'])
+            ->name('products.attributes.destroy');
 
         // Konfirmasi Penerimaan Barang
         Route::get('/stock-transactions/confirm/incoming', [StockTransactionController::class, 'pendingIncoming'])->name('stock-transactions.confirm.incoming');

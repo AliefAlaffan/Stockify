@@ -10,12 +10,23 @@
                     <th class="px-6 py-3.5 font-semibold">Kategori</th>
                     <th class="px-6 py-3.5 font-semibold">Supplier</th>
                     <th class="px-6 py-3.5 font-semibold">Harga Jual</th>
+                    <th class="px-6 py-3.5 font-semibold">Stok</th>
                     <th class="px-6 py-3.5 font-semibold">Min. Stok</th>
                     <th class="px-6 py-3.5 font-semibold text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
                 @foreach ($products as $product)
+                    @php
+                        $stock = $product->current_stock ?? 0;
+                        if ($stock <= 0) {
+                            $stockPill = 'pill-brick';
+                        } elseif ($stock <= $product->minimum_stock) {
+                            $stockPill = 'pill-gold';
+                        } else {
+                            $stockPill = 'pill-emerald';
+                        }
+                    @endphp
                     <tr class="table-row hover:bg-canvas-alt/40">
                         <td class="px-6 py-3.5">
                             <div class="flex items-center gap-3">
@@ -35,6 +46,11 @@
                         <td class="px-6 py-3.5 text-ink-soft">{{ $product->category->name ?? '—' }}</td>
                         <td class="px-6 py-3.5 text-ink-soft">{{ $product->supplier->name ?? '—' }}</td>
                         <td class="px-6 py-3.5 font-medium text-ink">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</td>
+                        <td class="px-6 py-3.5">
+                            <span class="pill {{ $stockPill }}">
+                                {{ $stock }}
+                            </span>
+                        </td>
                         <td class="px-6 py-3.5 text-ink-soft">{{ $product->minimum_stock }}</td>
                         <td class="px-6 py-3.5 text-right">
                             <div class="inline-flex items-center gap-1">
@@ -78,4 +94,4 @@
             @endunless
         </div>
     @endif
-</div> 
+</div>

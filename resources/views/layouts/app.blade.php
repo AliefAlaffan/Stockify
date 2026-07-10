@@ -11,7 +11,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -140,7 +140,6 @@
                 </div>
 
                 <!-- DATA MASTER -->
-                @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang',]))
                 <div class="sidebar-item-in" style="animation-delay: 40ms">
                     <button type="button" class="sidebar-group-title flex items-center justify-between w-full px-2 mb-2.5" data-group-toggle="master">
                         <span class="text-[10px] font-semibold tracking-widest text-steel-light uppercase">Data Master</span>
@@ -153,15 +152,14 @@
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path></svg>
                             </span>
                             <span class="sidebar-label">Produk</span>
-                        
                         </a>
+                        @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang',]))
                         <a href="{{ route('suppliers.index') }}"
                             class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('suppliers.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
                             <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('suppliers.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"/></svg>
                             </span>
                             <span class="sidebar-label">Supplier</span>
-                           
                         </a>
                         @if(auth()->user()->role === 'Admin')
                         <a href="{{ route('categories.index') }}"
@@ -170,15 +168,14 @@
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v10a2 2 0 002 2h10a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H5a1 1 0 000 2z" clip-rule="evenodd"/></svg>
                             </span>
                             <span class="sidebar-label">Kategori</span>
-                        
                         </a>
+                        @endif
                         @endif
                     </div>
                 </div>
-                @endif
+               
 
                 <!-- OPERASI -->
-                @if(auth()->user()->role !== 'Admin')
                 <div class="sidebar-item-in" style="animation-delay: 80ms">
                     <button type="button" class="sidebar-group-title flex items-center justify-between w-full px-2 mb-2.5" data-group-toggle="operasi">
                         <span class="text-[10px] font-semibold tracking-widest text-steel-light uppercase">Operasi</span>
@@ -192,7 +189,6 @@
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"/></svg>
                             </span>
                             <span class="sidebar-label">Barang Masuk</span>
-                            
                         </a>
                         <a href="{{ route('stock-transactions.out.index') }}"
                             class="nav-link {{ request()->routeIs('stock-transactions.out.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-transactions.out.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
@@ -200,15 +196,15 @@
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a.75.75 0 000 1.5h6A.75.75 0 0013 9H7z" clip-rule="evenodd"/></svg>
                             </span>
                             <span class="sidebar-label">Barang Keluar</span>
-                            
                         </a>
+                        @endif
+                        @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))
                         <a href="{{ route('stock-opname.index') }}"
                             class="nav-link {{ request()->routeIs('stock-opname.*') ? 'active' : '' }} flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-sm {{ request()->routeIs('stock-opname.*') ? 'text-ink font-semibold' : 'text-ink-soft font-medium' }}">
                             <span class="nav-icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 {{ request()->routeIs('stock-opname.*') ? 'bg-brand text-white shadow-sm shadow-brand/40' : 'text-steel' }}">
                                 <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" clip-rule="evenodd"/></svg>
                             </span>
                             <span class="sidebar-label">Stock Opname</span>
-                            
                         </a>
                         @endif
 
@@ -232,7 +228,6 @@
                         @endif
                     </div>
                 </div>
-                @endif
 
                 <!-- LAPORAN -->
                 @if(in_array(auth()->user()->role, ['Admin', 'Manajer Gudang']))

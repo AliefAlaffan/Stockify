@@ -23,19 +23,15 @@ class UserActivityExport implements FromCollection, WithHeadings, WithMapping, S
 
     public function headings(): array
     {
-        return ['Waktu Dicatat', 'Pengguna', 'Jenis', 'Produk', 'Jumlah', 'Tanggal Transaksi', 'Status'];
+        return ['Waktu', 'Pengguna', 'Aktivitas'];
     }
 
     public function map($activity): array
     {
         return [
             $activity->created_at->format('d M Y H:i'),
-            $activity->user->name ?? '-',
-            $activity->type,
-            $activity->product->name ?? '-',
-            $activity->quantity,
-            \Carbon\Carbon::parse($activity->date)->format('d M Y'),
-            $activity->status,
+            $activity->user->name ?? 'Pengguna tidak diketahui',
+            $activity->description,
         ];
     }
 }

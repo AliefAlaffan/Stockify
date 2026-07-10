@@ -175,28 +175,79 @@ class ReportController extends Controller
 
     public function userActivity(Request $request)
     {
-        $activities = $this->buildActivityQuery($request)->paginate(20)->withQueryString();
-        $users = User::all();
+        $start = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $end   = $request->end_date   ?? now()->toDateString();
+
+        $logActivities = \App\Models\ActivityLog::with('user')
+        ->whereDate('created_at', '>=', $start)
+        ->whereDate('created_at', '<=', $end)
+        ->when($request->user_id, fn ($q) => $q->where('user_id', $request->user_id))
+        ->get()
+        ->map(fn ($log) => (object) [
+            'type'        => 'log',
+            'action'      => $log->action,
+            'description' => $log->description,
+            'changes'     => $log->changes,   // <-- pastikan baris ini ada
+            'user'        => $log->user,
+            'created_at'  => $log->created_at,
+        ]);
+
+        $allActivities = $logActivities->sortByDesc('created_at')->values();
+
+        $page = (int) $request->get('page', 1);
+        $perPage = 20;
+
+        $activities = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allActivities->forPage($page, $perPage)->values(),
+            $allActivities->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        $users = \App\Models\User::all();
 
         return view('reports.user-activity', compact('activities', 'users'));
     }
 
     public function userActivityExportPdf(Request $request)
     {
-        $activities = $this->buildActivityQuery($request)->get();
+        $start = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $end   = $request->end_date   ?? now()->toDateString();
 
-        $pdf = Pdf::loadView('reports.pdf.user-activity', compact('activities'));
+        $activities = \App\Models\ActivityLog::with('user')
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->when($request->user_id, fn ($q) => $q->where('user_id', $request->user_id))
+            ->orderByDesc('created_at')
+            ->get();
+
+        $pdf = Pdf::loadView('reports.pdf.user-activity', [
+            'activities' => $activities,
+            'startDate'  => $start,
+            'endDate'    => $end,
+        ]);
 
         return $pdf->download('laporan-aktivitas-' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function userActivityExportExcel(Request $request)
     {
-        $activities = $this->buildActivityQuery($request)->get();
+        $start = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $end   = $request->end_date   ?? now()->toDateString();
+
+        $activities = \App\Models\ActivityLog::with('user')
+            ->whereDate('created_at', '>=', $start)
+            ->whereDate('created_at', '<=', $end)
+            ->when($request->user_id, fn ($q) => $q->where('user_id', $request->user_id))
+            ->orderByDesc('created_at')
+            ->get();
 
         return Excel::download(
             new UserActivityExport($activities),
             'laporan-aktivitas-' . now()->format('Y-m-d') . '.xlsx'
         );
     }
+
+    
 }

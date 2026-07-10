@@ -35,12 +35,12 @@
             </div>
             <div class="flex items-center gap-2">
                 <button type="submit" class="btn-primary px-4 py-2.5 text-sm font-semibold text-white rounded-xl">Terapkan</button>
-                <a href="{{ route('reports.stock.export.pdf', request()->query()) }}"
+                <a href="{{ route('reports.user-activity.export.pdf', request()->query()) }}"
                     class="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
                     PDF
                 </a>
-                <a href="{{ route('reports.stock.export.excel', request()->query()) }}"
+                <a href="{{ route('reports.user-activity.export.excel', request()->query()) }}"
                     class="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 4h9l3 3v9a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1z"/></svg>
                     Excel
@@ -54,23 +54,35 @@
         @if ($activities->count() > 0)
             <div class="divide-y divide-gray-50">
                 @foreach ($activities as $activity)
-                    <div class="flex items-center gap-4 p-4 hover:bg-canvas-alt/30 transition-colors">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-freight/10 flex-shrink-0">
-                            <svg class="w-4 h-4 text-freight" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/></svg>
+                    <div class="flex items-start gap-4 p-4 hover:bg-canvas-alt/30 transition-colors">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-lg flex-shrink-0 mt-0.5
+                            {{ $activity->action === 'stock_opname' ? 'bg-amber/10' : 'bg-freight/10' }}">
+                            @if ($activity->action === 'stock_opname')
+                                <svg class="w-4 h-4 text-amber-dark" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m6 10V7M4 21h16a1 1 0 001-1V4a1 1 0 00-1-1H4a1 1 0 00-1 1v16a1 1 0 001 1z"/></svg>
+                            @else
+                                <svg class="w-4 h-4 text-freight" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 6.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zM3.5 17.25c0-3.176 2.91-5.75 6.5-5.75s6.5 2.574 6.5 5.75"/></svg>
+                            @endif
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm text-ink">
                                 <span class="font-semibold">{{ $activity->user->name ?? 'Pengguna tidak diketahui' }}</span>
-                                mencatat transaksi
-                                <span class="font-semibold">{{ strtolower($activity->type) }}</span>
-                                untuk <span class="font-medium">{{ $activity->product->name ?? '—' }}</span>
-                                sebanyak <span class="font-mono-data font-semibold">{{ $activity->quantity }}</span> unit
+                                {{ $activity->description }}
                             </p>
-                            <p class="text-xs text-steel-light mt-1">
-                                {{ \Carbon\Carbon::parse($activity->date)->format('d M Y') }} ·
-                                Status: {{ $activity->status }} ·
-                                Dicatat {{ $activity->created_at->diffForHumans() }}
-                            </p>
+
+                            @if ($activity->changes)
+                                <div class="mt-2 flex flex-wrap gap-1.5">
+                                    @foreach ($activity->changes as $field => $change)
+                                        @if (is_array($change) && array_key_exists('from', $change))
+                                            <span class="text-[11px] px-2 py-1 bg-canvas-alt text-ink-soft rounded-md">
+                                                <span class="font-medium">{{ ucwords(str_replace('_', ' ', $field)) }}:</span>
+                                                {{ Str::limit($change['from'] ?? '—', 25) }} → {{ Str::limit($change['to'] ?? '—', 25) }}
+                                            </span>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <p class="text-xs text-steel-light mt-1.5">{{ $activity->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
                 @endforeach
