@@ -36,28 +36,50 @@
                         </td>
                         <td class="px-6 py-3.5 text-steel font-mono-data text-xs">{{ $user->created_at->format('d M Y') }}</td>
                         <td class="px-6 py-3.5 text-right">
-                            <div class="inline-flex items-center gap-1">
-                                <a href="{{ route('users.edit', $user->id) }}" class="icon-btn text-freight hover:bg-freight/10" title="Edit">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 3.5a1.914 1.914 0 012.706 2.706L6.5 15.914 3 16.5l.586-3.5 9.914-9.5z"/></svg>
-                                </a>
-                                @php
-                                    $isLastAdmin = $user->role === 'Admin' && \App\Models\User::where('role', 'Admin')->count() <= 1;
-                                @endphp
+                            @php
+                                $isSelf = $user->id === auth()->id();
+                                $isOtherAdmin = $user->role === 'Admin' && !$isSelf;
+                            @endphp
 
-                                @if ($user->id !== auth()->id() && !$isLastAdmin)
-                                    <button type="button"
-                                        data-modal-target="modal-delete-user"
-                                        data-modal-toggle="modal-delete-user"
-                                        onclick="document.getElementById('form-delete-user').action = '{{ route('users.destroy', $user->id) }}'; document.getElementById('delete-user-name').textContent = '{{ addslashes($user->name) }}'"
-                                        class="icon-btn text-rust hover:bg-rust/10" title="Hapus">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
-                                    </button>
-                                @elseif ($isLastAdmin)
-                                    <span class="icon-btn text-steel-light cursor-not-allowed" title="Admin terakhir tidak bisa dihapus">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M14.5 6.5l-8 8m0-8l8 8M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
-                                    </span>
-                                @endif
-                            </div>
+                            @if ($isOtherAdmin)
+                                <span class="icon-btn text-steel-light cursor-not-allowed inline-flex" title="Akun Admin hanya bisa dikelola oleh pemiliknya sendiri di halaman Profil">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 6.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zM3.5 17.25c0-3.176 2.91-5.75 6.5-5.75 1.6 0 3.06.523 4.207 1.4M15 12v4m-2-2h4"/></svg>
+                                </span>
+                            @else
+                                <div class="inline-flex items-center gap-1">
+                                    @unless ($isSelf)
+                                        <a href="{{ route('users.edit', $user->id) }}" class="icon-btn text-freight hover:bg-freight/10" title="Edit">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 3.5a1.914 1.914 0 012.706 2.706L6.5 15.914 3 16.5l.586-3.5 9.914-9.5z"/></svg>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('profile.edit') }}" class="icon-btn text-freight hover:bg-freight/10" title="Edit profil kamu">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 3.5a1.914 1.914 0 012.706 2.706L6.5 15.914 3 16.5l.586-3.5 9.914-9.5z"/></svg>
+                                        </a>
+                                    @endunless
+
+                                    @php
+                                        $isLastAdmin = $user->role === 'Admin' && \App\Models\User::where('role', 'Admin')->count() <= 1;
+                                    @endphp
+
+                                    @if (!$isSelf && !$isLastAdmin)
+                                        <button type="button"
+                                            data-modal-target="modal-delete-user"
+                                            data-modal-toggle="modal-delete-user"
+                                            onclick="document.getElementById('form-delete-user').action = '{{ route('users.destroy', $user->id) }}'; document.getElementById('delete-user-name').textContent = '{{ addslashes($user->name) }}'"
+                                            class="icon-btn text-rust hover:bg-rust/10" title="Hapus">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
+                                        </button>
+                                    @elseif ($isSelf)
+                                        <span class="icon-btn text-steel-light cursor-not-allowed" title="Hapus akun sendiri dari halaman Profil">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
+                                        </span>
+                                    @elseif ($isLastAdmin)
+                                        <span class="icon-btn text-steel-light cursor-not-allowed" title="Admin terakhir tidak bisa dihapus">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M14.5 6.5l-8 8m0-8l8 8M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
+                                        </span>
+                                    @endif
+                                </div>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

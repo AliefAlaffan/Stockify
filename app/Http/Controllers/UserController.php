@@ -57,53 +57,53 @@ class UserController extends Controller
     }
 
     public function update(Request $request, User $user)
-{
-    $validated = $request->validate([
-        'name'     => ['required', 'string', 'max:255'],
-        'email'    => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-        'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        'role'     => ['required', Rule::in(['Admin', 'Manajer Gudang', 'Staff Gudang'])],
-    ]);
+    {
+        $validated = $request->validate([
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role'     => ['required', Rule::in(['Admin', 'Manajer Gudang', 'Staff Gudang'])],
+        ]);
 
-    // Cegah Admin terakhir di-downgrade ke role lain
-    if ($user->role === 'Admin' && $validated['role'] !== 'Admin') {
-        $adminCount = User::where('role', 'Admin')->count();
-        if ($adminCount <= 1) {
-            return redirect()->route('users.edit', $user->id)
-                ->with('error', 'Tidak bisa mengubah role Admin terakhir. Sistem harus punya minimal 1 Admin.');
+        // Cegah Admin terakhir di-downgrade ke role lain
+        if ($user->role === 'Admin' && $validated['role'] !== 'Admin') {
+            $adminCount = User::where('role', 'Admin')->count();
+            if ($adminCount <= 1) {
+                return redirect()->route('users.edit', $user->id)
+                    ->with('error', 'Tidak bisa mengubah role Admin terakhir. Sistem harus punya minimal 1 Admin.');
+            }
         }
-    }
 
-    $user->name  = $validated['name'];
-    $user->email = $validated['email'];
-    $user->role  = $validated['role'];
+        $user->name  = $validated['name'];
+        $user->email = $validated['email'];
+        $user->role  = $validated['role'];
 
-    if (!empty($validated['password'])) {
-        $user->password = Hash::make($validated['password']);
-    }
-
-    $user->save();
-
-    return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
-}
-
-public function destroy(User $user)
-{
-    if ($user->id === auth()->id()) {
-        return redirect()->route('users.index')->with('error', 'Kamu tidak bisa menghapus akunmu sendiri.');
-    }
-
-    // Cegah Admin terakhir dihapus
-    if ($user->role === 'Admin') {
-        $adminCount = User::where('role', 'Admin')->count();
-        if ($adminCount <= 1) {
-            return redirect()->route('users.index')
-                ->with('error', 'Tidak bisa menghapus Admin terakhir. Sistem harus punya minimal 1 Admin.');
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
         }
+
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
-    $user->delete();
+    public function destroy(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return redirect()->route('users.index')->with('error', 'Kamu tidak bisa menghapus akunmu sendiri.');
+        }
 
-    return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus.');
-}
+        // Cegah Admin terakhir dihapus
+        if ($user->role === 'Admin') {
+            $adminCount = User::where('role', 'Admin')->count();
+            if ($adminCount <= 1) {
+                return redirect()->route('users.index')
+                    ->with('error', 'Tidak bisa menghapus Admin terakhir. Sistem harus punya minimal 1 Admin.');
+            }
+        }
+
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus.');
+    }
 }

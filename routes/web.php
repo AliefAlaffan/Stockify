@@ -33,14 +33,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Profile bawaan Breeze
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::middleware(['role:Admin,Manajer Gudang'])->group(function () {
-
-        Route::resource('products', ProductController::class);
+     Route::resource('products', ProductController::class);
 
         Route::get('/products-export', [ProductController::class, 'exportExcel'])->name('products.export');
         Route::get('/products-import-template', [ProductController::class, 'downloadTemplate'])->name('products.import.template');
@@ -55,6 +48,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'destroy'])
             ->name('products.attributes.destroy');
 
+    // Profile bawaan Breeze
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::middleware(['role:Admin,Manajer Gudang'])->group(function () {
         Route::resource('suppliers', SupplierController::class)->except(['create', 'edit']);
 
         Route::prefix('reports')->name('reports.')->group(function () {
@@ -135,22 +134,6 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware(['role:Staff Gudang'])->group(function () {
-
-        Route::resource('products', ProductController::class);
-
-        Route::get('/products-export', [ProductController::class, 'exportExcel'])->name('products.export');
-        Route::get('/products-import-template', [ProductController::class, 'downloadTemplate'])->name('products.import.template');
-        Route::post('/products-import', [ProductController::class, 'import'])->name('products.import');
-
-        Route::get('/products/{product}/attributes', [ProductAttributeController::class, 'index'])
-            ->name('products.attributes.index');
-        Route::post('/products/{product}/attributes', [ProductAttributeController::class, 'store'])
-            ->name('products.attributes.store');
-        Route::put('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'update'])
-            ->name('products.attributes.update');
-        Route::delete('/products/{product}/attributes/{attribute}', [ProductAttributeController::class, 'destroy'])
-            ->name('products.attributes.destroy');
-
         // Konfirmasi Penerimaan Barang
         Route::get('/stock-transactions/confirm/incoming', [StockTransactionController::class, 'pendingIncoming'])->name('stock-transactions.confirm.incoming');
         Route::put('/stock-transactions/confirm/incoming/{id}', [StockTransactionController::class, 'confirmIncoming'])->name('stock-transactions.confirm.incoming.update');
