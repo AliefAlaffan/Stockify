@@ -145,15 +145,6 @@ Route::middleware('auth')->group(function () {
 
         
     });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Semua Role (view saja) - Supplier list, Product list
-    |--------------------------------------------------------------------------
-    */
-    // Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
-    // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    // Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 });
 
 require __DIR__.'/auth.php';
