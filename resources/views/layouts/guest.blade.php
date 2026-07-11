@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ asset('images/stockify-icon-256.png') }}">
-    <title>{{ config('app.name', 'Stockify') }} — Masuk</title>
+    <title>{{ setting('app_name', config('app.name', 'Stockify')) }} — Masuk</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +39,7 @@
                 <div class="flex items-center justify-between animate-fade-up">
                     <div class="relative">
                         <span class="absolute inset-0 rounded-2xl bg-brand/30 blur-xl scale-110"></span>
-                        <img src="{{ asset('images/stockify-icon-256.png') }}" alt="Stockify" class="relative w-20 h-20 object-contain">
+                        <img src="{{ asset('images/stockify-icon-256.png') }}" alt="Stockify" class="relative w-24 h-24 object-contain">
                     </div>
                     <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                         <span class="status-dot w-1.5 h-1.5 rounded-full bg-brand"></span>

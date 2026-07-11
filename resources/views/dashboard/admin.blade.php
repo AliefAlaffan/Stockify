@@ -10,10 +10,10 @@
         </div>
         <div class="flex items-center gap-2">
             @if($lowStockCount > 0)
-                <a href="{{ route('dashboard') }}" class="stock-tag bg-rust/10 text-rust">
+                <span class="stock-tag bg-rust/10 text-rust">
                     <span class="stock-tag-dot bg-rust"></span>
                     {{ $lowStockCount }} produk stok menipis
-                </a>
+                </span>
             @endif
             <span class="stock-tag bg-brand/8 text-brand-dark">
                 <span class="stock-tag-dot bg-brand status-dot"></span>
@@ -28,7 +28,7 @@
             <div class="flex items-start justify-between">
                 <div>
                     <p class="text-xs font-medium text-steel uppercase tracking-wide">Total Produk</p>
-                    <p class="font-display text-3xl font-bold text-ink mt-2"><span class="stat-count" data-target="{{ $totalProducts }}">0</span></p>
+                    <p class="font-display text-3xl font-bold text-depot mt-2"><span class="stat-count" data-target="{{ $totalProducts }}">0</span></p>
                 </div>
                 <div class="icon-badge bg-brand/12">
                     <svg class="w-5 h-5 text-brand-dark" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path></svg>
@@ -56,17 +56,17 @@
             </a>
         </div>
 
-        <div class="bento-card stat-card stat-rust animate-fade-up bg-white p-5 rounded-2xl border border-gray-100" style="animation-delay: 120ms">
+        <div class="bento-card stat-card animate-fade-up bg-white p-5 rounded-2xl border border-gray-100" style="animation-delay: 120ms">
             <div class="flex items-start justify-between">
                 <div>
                     <p class="text-xs font-medium text-steel uppercase tracking-wide">Total Supplier</p>
-                    <p class="font-display text-3xl font-bold text-rust mt-2"><span class="stat-count" data-target="{{ $totalSuppliers }}">0</span></p>
+                    <p class="font-display text-3xl font-bold text-depot mt-2"><span class="stat-count" data-target="{{ $totalSuppliers }}">0</span></p>
                 </div>
-                <div class="icon-badge bg-rust/15">
-                    <svg class="w-5 h-5 text-rust" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"></path></svg>
+                <div class="icon-badge bg-brand/12">
+                    <svg class="w-5 h-5 text-brand-dark" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"></path></svg>
                 </div>
             </div>
-            <a href="{{ route('suppliers.index') }}" class="flex items-center gap-1 text-xs font-medium text-rust mt-3 hover:underline">
+            <a href="{{ route('suppliers.index') }}" class="flex items-center gap-1 text-xs font-medium text-brand-dark mt-3 hover:underline">
                 Lihat semua supplier
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
             </a>
