@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProfileController extends Controller
 {
@@ -47,15 +47,21 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        if ($request->user()->role !== 'Admin') {
+        $user = $request->user();
+
+        if ($user->role !== 'Admin') {
             abort(403, 'Hanya Admin yang dapat menghapus akun. Hubungi Admin.');
+        }
+
+        $adminCount = User::where('role', 'Admin')->count();
+        if ($adminCount <= 1) {
+            return Redirect::route('profile.edit')
+                ->withErrors(['password' => 'Tidak bisa menghapus akun ini karena kamu Admin terakhir. Sistem harus punya minimal 1 Admin.'], 'userDeletion');
         }
 
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
-
-        $user = $request->user();
 
         Auth::logout();
 

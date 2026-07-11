@@ -1,18 +1,35 @@
+@php
+    $isLastAdmin = auth()->user()->role === 'Admin' && \App\Models\User::where('role', 'Admin')->count() <= 1;
+@endphp
+
 <div class="flex items-center gap-2 mb-5 pb-5 border-b border-rust/10">
     <div class="icon-badge w-9 h-9 !rounded-lg bg-rust/10">
         <svg class="w-4 h-4 text-rust" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 6h12M8 6V4.5A1.5 1.5 0 019.5 3h1A1.5 1.5 0 0112 4.5V6m2 0v9.5A1.5 1.5 0 0112.5 17h-5A1.5 1.5 0 016 15.5V6h8z"/></svg>
     </div>
     <div>
         <h2 class="font-display font-semibold text-ink text-sm">Hapus Akun</h2>
-        <p class="text-xs text-steel mt-0.5">Setelah dihapus, semua data akun ini akan hilang permanen.</p>
+        <p class="text-xs text-steel mt-0.5">
+            @if ($isLastAdmin)
+                Kamu adalah satu-satunya Admin di sistem, jadi akun ini tidak bisa dihapus. Tambahkan Admin lain terlebih dahulu jika ingin menghapus akun ini.
+            @else
+                Setelah dihapus, semua data akun ini akan hilang permanen.
+            @endif
+        </p>
     </div>
 </div>
 
-<button type="button"
-    data-modal-target="modal-delete-account" data-modal-toggle="modal-delete-account"
-    class="px-4 py-2.5 text-sm font-semibold text-rust bg-rust/8 rounded-xl hover:bg-rust/15 transition-colors">
-    Hapus Akun Saya
-</button>
+@if ($isLastAdmin)
+    <span class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-steel-light bg-canvas-alt rounded-xl cursor-not-allowed">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M13.5 6.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zM3.5 17.25c0-3.176 2.91-5.75 6.5-5.75 1.6 0 3.06.523 4.207 1.4M15 12v4m-2-2h4"/></svg>
+        Hapus Akun Saya
+    </span>
+@else
+    <button type="button"
+        data-modal-target="modal-delete-account" data-modal-toggle="modal-delete-account"
+        class="px-4 py-2.5 text-sm font-semibold text-rust bg-rust/8 rounded-xl hover:bg-rust/15 transition-colors">
+        Hapus Akun Saya
+    </button>
+@endif
 
 <div id="modal-delete-account" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-ink/30 modal-backdrop">
     <div class="modal-panel relative w-full max-w-md">

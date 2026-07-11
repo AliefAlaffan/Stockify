@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -53,11 +54,21 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        if ($user->role === 'Admin' && $user->id !== Auth::id()) {
+            return redirect()->route('users.index')
+                ->with('error', 'Akun Admin lain hanya bisa dikelola oleh pemiliknya sendiri.');
+        }
+
         return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
+        if ($user->role === 'Admin' && $user->id !== Auth::id()) {
+            return redirect()->route('users.index')
+                ->with('error', 'Akun Admin lain hanya bisa dikelola oleh pemiliknya sendiri.');
+        }
+
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
@@ -65,7 +76,6 @@ class UserController extends Controller
             'role'     => ['required', Rule::in(['Admin', 'Manajer Gudang', 'Staff Gudang'])],
         ]);
 
-        // Cegah Admin terakhir di-downgrade ke role lain
         if ($user->role === 'Admin' && $validated['role'] !== 'Admin') {
             $adminCount = User::where('role', 'Admin')->count();
             if ($adminCount <= 1) {
@@ -87,21 +97,36 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
-        if ($user->id === auth()->id()) {
-            return redirect()->route('users.index')->with('error', 'Kamu tidak bisa menghapus akunmu sendiri.');
+        // Admin lain (bukan diri sendiri) — tidak boleh sama sekali
+        if ($user->role === 'Admin' && $user->id !== Auth::id()) {
+            return redirect()->route('users.index')
+                ->with('error', 'Akun Admin lain hanya bisa dihapus oleh pemiliknya sendiri.');
         }
 
-        // Cegah Admin terakhir dihapus
-        if ($user->role === 'Admin') {
+        // Menghapus akun sendiri (dan kebetulan Admin) — wajib password + tidak boleh Admin terakhir
+        if ($user->role === 'Admin' && $user->id === Auth::id()) {
             $adminCount = User::where('role', 'Admin')->count();
             if ($adminCount <= 1) {
                 return redirect()->route('users.index')
-                    ->with('error', 'Tidak bisa menghapus Admin terakhir. Sistem harus punya minimal 1 Admin.');
+                    ->with('error', 'Tidak bisa menghapus akun ini karena kamu Admin terakhir. Sistem harus punya minimal 1 Admin.');
             }
+
+            $request->validateWithBag('userDeletion', [
+                'password' => ['required', 'current_password'],
+            ]);
+
+            Auth::logout();
+            $user->delete();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/')->with('success', 'Akunmu berhasil dihapus.');
         }
 
+        // Manajer Gudang / Staff Gudang — normal, tidak berubah
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus.');

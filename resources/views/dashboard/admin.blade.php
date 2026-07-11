@@ -47,11 +47,11 @@
                     <p class="font-display text-3xl font-bold text-depot mt-2"><span class="stat-count" data-target="{{ $totalCategories }}">0</span></p>
                 </div>
                 <div class="icon-badge bg-depot/15">
-                    <svg class="w-5 h-5 text-depot" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V3a1 1 0 012 0v9.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    <svg class="w-5 h-5 text-depot" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v10a2 2 0 002 2h10a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H5a1 1 0 000 2z" clip-rule="evenodd"></path></svg>
                 </div>
             </div>
-            <a href="{{ route('stock-transactions.in.index') }}" class="flex items-center gap-1 text-xs font-medium text-depot mt-3 hover:underline">
-                Lihat riwayat
+            <a href="{{ route('categories.index') }}" class="flex items-center gap-1 text-xs font-medium text-depot mt-3 hover:underline">
+                Lihat semua kategori
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
             </a>
         </div>
@@ -63,11 +63,11 @@
                     <p class="font-display text-3xl font-bold text-rust mt-2"><span class="stat-count" data-target="{{ $totalSuppliers }}">0</span></p>
                 </div>
                 <div class="icon-badge bg-rust/15">
-                    <svg class="w-5 h-5 text-rust" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V17a1 1 0 01-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                    <svg class="w-5 h-5 text-rust" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 00-1 1v9a2 2 0 002 2h.05a2.5 2.5 0 014.9 0h4.1a2.5 2.5 0 014.9 0H18a1 1 0 001-1v-4.19a1 1 0 00-.293-.707l-2.81-2.81A1 1 0 0015.19 7H14V5a1 1 0 00-1-1H3z"></path></svg>
                 </div>
             </div>
-            <a href="{{ route('stock-transactions.out.index') }}" class="flex items-center gap-1 text-xs font-medium text-rust mt-3 hover:underline">
-                Lihat riwayat
+            <a href="{{ route('suppliers.index') }}" class="flex items-center gap-1 text-xs font-medium text-rust mt-3 hover:underline">
+                Lihat semua supplier
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
             </a>
         </div>
@@ -251,7 +251,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             function animateCount(el, target, duration) {
-                duration = duration || 1100;
+                duration = duration || 1000;
                 var startTime = null;
                 function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
                 function step(ts) {
