@@ -102,12 +102,19 @@
             </div>
             <ul class="space-y-4 max-h-72 overflow-y-auto sidebar-scroll pr-1">
                 @forelse ($recentActivity as $activity)
+                    @php
+                        $dotColor = match($activity->action) {
+                            'created' => 'bg-brand ring-brand/20',
+                            'deleted' => 'bg-rust ring-rust/20',
+                            'stock_opname' => 'bg-amber-dark ring-amber/20',
+                            default => 'bg-freight ring-freight/20',
+                        };
+                    @endphp
                     <li class="timeline-item relative pl-5">
-                        <span class="timeline-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full border-2 border-white ring-2 {{ $activity->type === 'Masuk' ? 'bg-depot ring-depot/20' : 'bg-rust ring-rust/20' }}"></span>
+                        <span class="timeline-dot absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full border-2 border-white ring-2 {{ $dotColor }}"></span>
                         <p class="text-sm text-ink-soft leading-snug">
-                            <span class="font-semibold text-ink">{{ $activity->user->name ?? '-' }}</span>
-                            {{ $activity->type === 'Masuk' ? 'mencatat barang masuk' : 'mencatat barang keluar' }}
-                            <span class="font-mono-data text-xs bg-canvas-alt px-1.5 py-0.5 rounded">{{ $activity->product->name ?? '-' }}</span>
+                            <span class="font-semibold text-ink">{{ $activity->user->name ?? 'Sistem' }}</span>
+                            {{ $activity->description }}
                         </p>
                         <p class="text-xs text-steel-light mt-0.5">{{ $activity->created_at->diffForHumans() }}</p>
                     </li>

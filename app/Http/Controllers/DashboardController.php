@@ -59,8 +59,11 @@ class DashboardController extends Controller
             ];
         }
 
-        $recentActivity = $allTransactions->sortByDesc('created_at')->take(8)->values();
-
+        $recentActivity = \App\Models\ActivityLog::with('user')
+        ->latest()
+        ->take(8)
+        ->get();
+        
         $topCategories = $productsWithRelations
             ->groupBy(fn($p) => $p->category->name ?? 'Tanpa Kategori')
             ->map(fn($group, $name) => ['name' => $name, 'count' => $group->count()])
