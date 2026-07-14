@@ -1,13 +1,30 @@
 <script>
 (function () {
-    const searchInput   = document.getElementById('search-input');
-    const searchClear   = document.getElementById('search-clear');
+    const searchInput    = document.getElementById('search-input');
+    const searchClear    = document.getElementById('search-clear');
+    const categoryFilter = document.getElementById('filter-category');
+    const supplierFilter = document.getElementById('filter-supplier');
     const tableContainer = document.getElementById('table-container');
     const baseUrl = @json($baseUrl);
     let debounceTimer;
 
-    function fetchResults(query, pushState = true) {
-        const url = query ? `${baseUrl}?search=${encodeURIComponent(query)}` : baseUrl;
+    function currentParams() {
+        const params = new URLSearchParams();
+        const search = searchInput ? searchInput.value.trim() : '';
+        const category = categoryFilter ? categoryFilter.value : '';
+        const supplier = supplierFilter ? supplierFilter.value : '';
+
+        if (search) params.set('search', search);
+        if (category) params.set('category_id', category);
+        if (supplier) params.set('supplier_id', supplier);
+
+        return params;
+    }
+
+    function fetchResults(pushState = true) {
+        const params = currentParams();
+        const query = params.toString();
+        const url = query ? `${baseUrl}?${query}` : baseUrl;
 
         fetch(url, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -18,7 +35,9 @@
             if (pushState) {
                 window.history.replaceState({}, '', url);
             }
-            searchClear.classList.toggle('hidden', !query);
+            if (searchClear) {
+                searchClear.classList.toggle('hidden', !params.get('search'));
+            }
         })
         .catch(() => {
             // gagal fetch, biarkan tabel lama tetap tampil
@@ -28,16 +47,23 @@
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             clearTimeout(debounceTimer);
-            const query = searchInput.value.trim();
-            debounceTimer = setTimeout(() => fetchResults(query), 400);
+            debounceTimer = setTimeout(() => fetchResults(), 400);
         });
     }
 
     if (searchClear) {
         searchClear.addEventListener('click', () => {
             searchInput.value = '';
-            fetchResults('');
+            fetchResults();
         });
+    }
+
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', () => fetchResults());
+    }
+
+    if (supplierFilter) {
+        supplierFilter.addEventListener('change', () => fetchResults());
     }
 
     // Tangani klik pagination link di dalam hasil AJAX

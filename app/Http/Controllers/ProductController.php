@@ -37,7 +37,13 @@ class ProductController extends Controller
         $products = Product::with(['category', 'supplier'])
             ->when($request->search, function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('sku', 'like', "%{$request->search}%");
+                ->orWhere('sku', 'like', "%{$request->search}%");
+            })
+            ->when($request->category_id, function ($q) use ($request) {
+                $q->where('category_id', $request->category_id);
+            })
+            ->when($request->supplier_id, function ($q) use ($request) {
+                $q->where('supplier_id', $request->supplier_id);
             })
             ->orderBy('name')
             ->paginate(15)
@@ -52,7 +58,10 @@ class ProductController extends Controller
             return view('products._table', compact('products'))->render();
         }
 
-        return view('products.index', compact('products'));
+        $categories = $this->categoryRepository->all();
+        $suppliers = $this->supplierRepository->all();
+
+        return view('products.index', compact('products', 'categories', 'suppliers'));
     }
 
     public function exportExcel(Request $request)

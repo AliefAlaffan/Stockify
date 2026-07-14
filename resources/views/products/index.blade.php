@@ -30,7 +30,7 @@
             <h1 class="font-display text-xl font-semibold text-ink">Produk</h1>
         </div>
             <div class="flex items-center gap-2">
-                <a href="{{ route('products.export', request()->only('search')) }}"
+                <a href="{{ route('products.export', request()->only(['search', 'category_id', 'supplier_id'])) }}"
                     class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-ink-soft bg-canvas-alt rounded-xl hover:bg-gray-200 transition-colors">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15v1a2 2 0 002 2h8a2 2 0 002-2v-1"/></svg>
                     Export
@@ -48,19 +48,50 @@
             </div>
     </div>
 
-    <!-- Search Bar -->
-    <div class="relative mb-5 max-w-sm">
-        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-steel-light pointer-events-none" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M17.5 17.5l-3.6-3.6m1.9-4.65a6.55 6.55 0 11-13.1 0 6.55 6.55 0 0113.1 0z"/>
-        </svg>
-        <input type="text" id="search-input" value="{{ request('search') }}"
-            placeholder="Cari nama produk atau SKU..."
-            class="bg-white border border-gray-200 text-ink text-sm rounded-xl focus:ring-2 focus:ring-brand/30 focus:border-brand block w-full pl-10 pr-9 py-2.5 transition-colors">
-        <button type="button" id="search-clear"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-steel-light hover:text-steel {{ request('search') ? '' : 'hidden' }}">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
-        </button>
+    <!-- Filter Card -->
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 mb-5">
+        <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-4">
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-ink uppercase tracking-wide">Cari</label>
+                <div class="relative">
+                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-steel-light pointer-events-none" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M17.5 17.5l-3.6-3.6m1.9-4.65a6.55 6.55 0 11-13.1 0 6.55 6.55 0 0113.1 0z"/>
+                    </svg>
+                    <input type="text" id="search-input" value="{{ request('search') }}"
+                        placeholder="Nama produk atau SKU..."
+                        class="bg-canvas-alt/60 border border-gray-200 text-ink text-sm rounded-xl focus:ring-2 focus:ring-brand/30 focus:border-brand block w-full pl-10 pr-9 py-2.5 transition-colors">
+                    <button type="button" id="search-clear"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-steel-light hover:text-steel {{ request('search') ? '' : 'hidden' }}">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-ink uppercase tracking-wide">Kategori</label>
+                <select id="filter-category" class="bg-canvas-alt/60 border border-gray-200 text-ink text-sm rounded-xl focus:ring-2 focus:ring-brand/30 focus:border-brand block w-full p-2.5 transition-colors">
+                    <option value="">Semua Kategori</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ (string) request('category_id') === (string) $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-ink uppercase tracking-wide">Supplier</label>
+                <select id="filter-supplier" class="bg-canvas-alt/60 border border-gray-200 text-ink text-sm rounded-xl focus:ring-2 focus:ring-brand/30 focus:border-brand block w-full p-2.5 transition-colors">
+                    <option value="">Semua Supplier</option>
+                    @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}" {{ (string) request('supplier_id') === (string) $supplier->id ? 'selected' : '' }}>
+                            {{ $supplier->name }}
+                        </option>
+                    @endforeach
+            </select>
+        </div>
     </div>
+</div>
 
     <div id="table-container">
         @include('products._table', ['products' => $products])
